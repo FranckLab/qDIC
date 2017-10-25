@@ -17,11 +17,12 @@ function [u, cc, dm, mFinal, decorrFlag] = IDIC(varargin)
 %         u{3} = magnitude
 %   cc: peak values of the cross-correlation for each interrogation
 %   dm: meshgrid spacing (8 by default)
+%   m_final: final meshgrid
 %   decorr_flag: flag indicating that decorrelation is occuring
 %
 % NOTES
 % -------------------------------------------------------------------------
-% To run you need a compatible C compiler. Please see
+% To run you may need a compatible C compiler. Please see
 % (http://www.mathworks.com/support/compilers/R2014a/index.html)
 %
 % If used please cite:
@@ -32,13 +33,13 @@ function [u, cc, dm, mFinal, decorrFlag] = IDIC(varargin)
 % PRESET CONSTANTS
 maxIterations = 9; % maximum number of iterations
 dm = 8; % desired output mesh spacing
-norm_xcc = 'n'; %switch to 'u' for un-normalized xcc - faster and less accurate
+norm_xcc = 'n'; %switch to 'u' for un-normalized xcc - faster but less accurate
 convergenceCrit = [0.15, 0.25, 0.075]; % convergence criteria
 ccThreshold = 1e-4; % bad cross-correlation threshold (un-normalized)
 %[not used in norm version]
 sizeThresh = 196;  %Threshold for maximum size of bad correlation regions
-percentThresh = 35; %Threshold for max % of total measurement pts failing q-factor testing
-stDevThresh = 0.13; %Threshold for max st. dev. of the fitted gaussian to the second peak
+percentThresh = 25; %Threshold for max % of total measurement pts failing q-factor testing
+stDevThresh = 0.15; %Threshold for max st. dev. of the fitted gaussian to the second peak
 
 cc = cell(1);
 cc{1} = struct('A',[],'max',[],'maxIdx',[],'qfactors',[],'q_thresh',[],...
@@ -62,25 +63,23 @@ while ~converged01 && i - 1 < maxIterations
         finalSize = sSize(i,:);
         [I, m] = parseImages(I,sSize(i,:),sSpacing(i,:));
         
-%         if i == 2 %only on the first iteration
-%             if prod(size(u{1})) == 1 %on the first image the disp guess is zero
-%                 u{1} = zeros(length(m{1}),length(m{2}));
-%                 u{2} = zeros(length(m{1}),length(m{2}));
-%             end
-%             u{1} = inpaint_nans(u{1}); %inpaint nans from last time's edge pts
-%             u{2} = inpaint_nans(u{2});
-%             I = areaMapping_2D(I0,m,u); %otherwise map the images w/ the initial guess
-%             [I, m] = parseImages(I,sSize(i,:),sSpacing(i,:));
-% %             u{1} = 0; %reset disp to zero
-% %             u{2} = 0;
-%         end
+        %warp images with displacement guess if a cumulative step
+        if i == 2 %only on the first iteration
+            if numel(u{1}) == 1 %on the first image the disp guess is zero
+                u{1} = zeros(length(m{1}),length(m{2}));
+                u{2} = zeros(length(m{1}),length(m{2}));
+            end
+            u{1} = inpaint_nans(u{1}); %inpaint nans from last time's edge pts
+            u{2} = inpaint_nans(u{2});
+            I = areaMapping_2D(I,m,u); %otherwise map the images w/ the initial guess
+            [I, m] = parseImages(I,sSize(i,:),sSpacing(i,:));
+%             u{1} = 0; %reset disp to zero
+%             u{2} = 0;
+        end
         
         % run cross-correlation to get an estimate of the displacements
-        %         try
         [du, cc{i-1}] = DIC(I,sSize,sSpacing(i,:),DICPadSize,ccThreshold,norm_xcc);
-        %         catch
-        %             disp('p')
-        %         end
+
         % add the displacements from previous iteration to current
         [u, ~, cc{i-1}, mFinal] = addDisplacements_2D(u,du,cc{i-1},cc{i-1},m,dm);
         
@@ -90,7 +89,6 @@ while ~converged01 && i - 1 < maxIterations
         
         % remove questionable displacement points
         [u,cc{i-1}.alpha_mask,cc{i-1}.nan_mask,cc{i-1}.edge_pts] = replaceOutliers_2D(u,cc{i-1});
-        %         end
         
         % mesh and pad images based on new subset size and spacing
         [I, m] = parseImages(I0,sSize(i,:),sSpacing(i,:));
@@ -138,7 +136,6 @@ I{1} = padarray(I{1},postPad,'replicate','post');
 
 I{2} = padarray(I{2},prePad,'replicate','pre');
 I{2} = padarray(I{2},postPad,'replicate','post');
-
 
 idx = cell(1,2);
 for i = 1:2, idx{i} = (1:sSpacing(i):(sizeI(i) + 1)) + sSize(i)/2; end
@@ -196,15 +193,6 @@ end
 function [u,cc,m] = parseOutputs(u,cc,sSize,padSize,m_)
 % parses outputs and unpads the displacment field and cc.
 
-% % % unpadSize(1,:) = ceil(padSize(1,:)/filterSpacing);
-% % % unpadSize(2,:) = floor((padSize(2,:)+1)/filterSpacing);
-% % % % +1 from the extra meshgrid point during the meshing of the DIC algorithm.
-% % % 
-% % % for i = 1:2
-% % %     u{i} = u{i}(1+unpadSize(1,1):end-unpadSize(2,1),...
-% % %         1+unpadSize(1,2):end-unpadSize(2,2));
-% % % end
-
 for i = 1:2
     m{i} = m_{i}-padSize(1,i)-sSize(i)/2;
 end
@@ -216,9 +204,6 @@ for jj = 1:length(cc)
     cc{jj}.max = [];
 end
 
-% cc.A = cc{1};%(1+unpadSize(1,1):end-unpadSize(2,1),...
-%1+unpadSize(1,2):end-unpadSize(2,2));
-
 end
 
 function decorrFlag = decorrelationCheck(cc,sizeThresh,percentThresh,stDevThresh)
@@ -229,11 +214,11 @@ function decorrFlag = decorrelationCheck(cc,sizeThresh,percentThresh,stDevThresh
 decorrFlag = 0;
 
 if nargin < 4
-    stDevThresh = 0.15;
+    stDevThresh = 0.13;
 elseif nargin < 3
-    percentThresh = 5;
+    percentThresh = 15;
 elseif nargin < 2
-    sizeThresh = 100;
+    sizeThresh = 121;
 end
 
 trim_size = ceil((cc{end}.sSize/2)./cc{end}.sSpacing)+1;
@@ -309,10 +294,7 @@ if max(norm_area(:)) > sizeThresh
 end
 
 % do the st dev based thresholding
-
 complete_qfactors = cc{end}.qfactors(3:4,:);
-
-%%
 for ii = 1:size(complete_qfactors,1)
     
     x = sort(complete_qfactors(ii,:));

@@ -1,6 +1,5 @@
-
 function [u, cc, dm, m] = funIDIC(varargin)
-% u = funIDIC(filename, sSize, incORcum) is the main function that performs
+% u = funIDIC(filename, sSize, sSizeMin, runMode) is the main function that performs
 % IDIC on a time series of images.  
 % 
 % INPUTS
@@ -45,6 +44,7 @@ function [u, cc, dm, m] = funIDIC(varargin)
 %         u{time}{3} = magnitude
 %   cc: cross correlation metrics (warning, can be quite large)
 %   dm: final meshgrid spacing (8 by default)
+%   gridPoint: final meshgrid points
 % 
 % NOTES
 % -------------------------------------------------------------------------
@@ -65,7 +65,6 @@ cc = cell(numImages-1,1);
 for i = 2:numImages % Reads images starting on the second image
     tStart = tic;
     I{2} = loadFile(fileInfo,i);
-%     cc{i}.norm(i-1) = norm(I{1}-I{2});
 
     %Start DIC
     disp(['Current file: ' fileInfo.filename{i}])

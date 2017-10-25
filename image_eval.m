@@ -30,7 +30,7 @@ function [noise_percent,spatial_res,CI_disp_mean,no_im] = image_eval(Folder,ext)
 %% Retrieve images
 
 %Load all of the file's directory information
-files = dir(strcat(Folder,'/*static*',ext));
+files = dir(strcat(Folder,filesep,'*static*',ext));
 l = length(files);
 
 %Only procede if evaluation images are present
@@ -46,7 +46,7 @@ else
     
     %read in the image sequence
     for ii = 1:l
-        READ = imread(strcat(Folder,'/',files(ii).name));
+        READ = imread(strcat(Folder,filesep,files(ii).name));
         full_images(:,:,ii) = double(READ(:,:,1));
     end
     

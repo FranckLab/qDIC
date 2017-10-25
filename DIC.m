@@ -16,7 +16,7 @@ function [u, cc] = DIC(varargin)
 % OUTPUTS
 % -------------------------------------------------------------------------
 %   u: cell containing the displacement field (u{1:2} = {u_x, u_y})
-%   cc: peak values of the cross-correlation for each interrogation
+%   cc: cc space maps, q-factors, and diagnostic struct
 %
 % NOTES
 % -------------------------------------------------------------------------
@@ -39,12 +39,7 @@ u12 = zeros(mSize_,2);
 cc = struct('A',[],'max',[],'sSpacing',[],'sSize',[],'maxIdx',[],'qfactors',[],'q_thresh',[],...
     'qfactors_accept',[]);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% wb = findall(0,'Tag','TMWWaitbar'); wb = wb(1);
-
-% waitbar(1/7,wb,'Estimating Displacements (Time Remaining: )');
-
-
+%inject small noise to avoid flat subsets
 noise = rand(size(I{1}))/10000;
 I{1} = I{1}+noise;
 I{2} = I{2}+noise;
@@ -55,44 +50,21 @@ if strcmp(norm_xcc,'n')||strcmp(norm_xcc,'norm')||strcmp(norm_xcc,'normalized')
     
     parfor k = 1:mSize_
         
-        %     tStart = tic; % begin timer
         %-----------------------------------------------------------------------
         % grab the moving subset from the images
         subst = I{1}(m{1}(k,:),m{2}(k,:));
         B = I{2}(m{1}(k,:),m{2}(k,:));
         %     size_sbst = size(subst);
         
-        
         % multiply by the modular transfer function to alter frequency content
         subst = MTF.*subst; B = MTF.*B;
         
         % run cross-correlation
-        
-        
-        %         figure(1)
-        %         subplot(2,1,1)
-        %         imagesc(B)
-        %         axis image
-        %         subplot(2,1,2)
-        %         imagesc(subst)
-        %         axis image
-        %         drawnow
-        %         pause(0.001)
-        
         A_ = normxcorr2(subst,B);
         A_small = A_(size(B,1)/2:size(B,1)+size(B,1)/2-1, ...
             size(B,2)/2:size(B,2)+size(B,2)/2-1);
         A{k} = imrotate(A_small,180);
-        
-        
-        %filtering step for A matrix
-        %         A_filt_ = removeOutliers_2D(A,0.25,0.025);
-        %         A_filt_ = A;
-        %         A_filt = A_filt_{1};
-        %
-        %         cc.A{k} = A_filt;
-        
-        %     imagesc(A); pause(0.01)
+       
         % find maximum index of the cross-correlaiton
         [max_val(k), maxIdx{k}] = max(A{k}(:));
         
@@ -113,7 +85,6 @@ if strcmp(norm_xcc,'n')||strcmp(norm_xcc,'norm')||strcmp(norm_xcc,'normalized')
 else
     parfor k = 1:mSize_
         
-        %     tStart = tic; % begin timer
         %-----------------------------------------------------------------------
         % grab the moving subset from the images
         subst = I{1}(m{1}(k,:),m{2}(k,:));
@@ -146,12 +117,6 @@ else
         
     end
     
-    % waitbar calculations (update only every 100 iterations)
-    %     if rem(k,100) == 0
-    %         tRemaining = (toc(tStart)*(mSize_ - k)); % Time remaining
-    %         waitbar(1/7*(k/mSize_ + 1),wb,['Est Disps (Time : ',...
-    %             datestr(datenum(0,0,0,0,0,tRemaining),'MM:SS'),')'])
-    %     end
     
 end
 
@@ -161,9 +126,7 @@ cc.max = max_val;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Reshape displacements and set bad correlations to zero
-% waitbar(2/7,wb,'Removing Bad Correlations')
-
+% Reshape displacements and discover bad correlation points
 if size(sSpacing,1) == 1
     spacingChange = 1;
 elseif sSpacing(end,1) == sSpacing(end-1,1)
@@ -181,12 +144,6 @@ cc.sSize = sSize;
 for ii = 1:2
     ccMask{ii} = reshape(double(ccMask_(ii,:)),mSize);
 end
-
-% u{1} = imgaussfilt(reshape(double(u12(:,2)),mSize).*ccMask,2);
-% u{2} = imgaussfilt(reshape(double(u12(:,1)),mSize).*ccMask,2);
-
-% u{1} = reshape(double(u12(:,2)),mSize).*ccMask{1}.*ccMask{2};
-% u{2} = reshape(double(u12(:,1)),mSize).*ccMask{1}.*ccMask{2};
 
 u{1} = reshape(double(u12(:,2)),mSize);%.*ccMask{1}.*ccMask{2};
 u{2} = reshape(double(u12(:,1)),mSize);%.*ccMask{1}.*ccMask{2};
@@ -379,7 +336,7 @@ end
 %% ========================================================================
 function [cc, ccMask] = ...
     removeBadCorrelations(I,cc,ccThreshold,norm_xcc,sizeChange,mSize,mSize_)
-% removes bad correlations.  You can insert your own method here.
+% flag bad correlation points, using q-factor analysis
 
 if strcmp(norm_xcc,'n')||strcmp(norm_xcc,'norm')||strcmp(norm_xcc,'normalized')
     
@@ -395,12 +352,6 @@ if strcmp(norm_xcc,'n')||strcmp(norm_xcc,'norm')||strcmp(norm_xcc,'normalized')
         
         peaks = unique(cc_min(P_img)); %some can be non-unique,
         %but this means its a bad xcc
-        
-        %         tic
-        %         [P(1),Pidx] = max(cc_min(:));
-        %         cc_min_ = cc_min(Pidx) - inf;
-        %         [P(2),~] = max(cc_min_(:));
-        %         toc
         
         %compute several quality metrics, as given in "Xue Z, Particle Image
         % Velocimetry Correlation Signal-to-noise Metrics, Particle Image

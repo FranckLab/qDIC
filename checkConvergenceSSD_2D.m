@@ -10,6 +10,7 @@ function [converged01, SSE1 , sSize1, sSpacing1] = checkConvergenceSSD_2D(I,SSE,
 %   I: cell containing the undeformed, I{1}, and deformed, I{2} 2-D images
 %   SSE: array of SSD values for all iterations
 %   sSize: interrogation window (subset) size for all iterations
+%   sSizeMin: interrogation window (subset) min size for all iterations
 %   sSpacing: interrogation window (subset) spacing for all iterations
 %   convergenceCrit: Array containing convergence criteria for stopping the
 %                    iterations.  [local, global] where local defines when
@@ -62,23 +63,13 @@ converged01 = 0;
 if iteration > 1 % skip before first displacement estimation
     
     %check if sSize is larger than the the minimum size requested
-%     if sSize0/2 >= sSizeMin
-        sSize1 = sSize0/2; %window size refinement
-%     else
-%         sSize1 = sSize0; %otherwise keep the same size
-%     end
+    sSize1 = sSize0/2; %window size refinement
     
     % ensure that all subset sizes are at minimum sSizeMin pixels in length
     sSize1(sSize1 < sSizeMin) = sSizeMin;
     
-
     % window spacing refinement. Only do if the sSpacing > 8 pixels
     if (sSpacing0 >= 32)
-        %         if sSize1 > sSizeMin
-        %             sSpacing1 = sSize1/2;
-        %         else
-        %             sSpacing1 = sSpacing0/2;
-        %         end
         sSpacing1 = sSpacing0/2;
     end
     sSpacing1(sSpacing1 < 8) = 8;

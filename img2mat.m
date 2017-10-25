@@ -1,8 +1,26 @@
-function [cellIMG,filename,filt_opt] = img2mat(Folder,ext,smoothing,s)
+function [IMG,filename,filt_opt] = img2mat(folder_in,ext_in,smoothing,s)
 %Read images and write them out in .mat
+%
+% INPUTS
+% -------------------------------------------------------------------------
+%   folder_in: folder containing orginal images
+%   ext_in: image formate extention
+%   folder_in: folder containing orginal images
+%   smoothing: on/off for Gaussian smoothing prefilter ([3,3],0.5)
+%   s: max number of images to use
+%
+% OUTPUTS
+% -------------------------------------------------------------------------
+%   IMG: image stack for all current images
+%   filename: regex for filename prefix
+%   filt_opt: filter options used if the smoothing param was set to 'yes'
+%
+% NOTES
+% -------------------------------------------------------------------------
+%
 
 %Load all of the files directory information
-files = dir(strcat('./',Folder,'/*',ext));
+files = dir(strcat('.',filesep,folder_in,filesep,'*',ext_in));
 
 %Determine the number of files
 if nargin<4
@@ -16,7 +34,7 @@ if strcmp(smoothing,'on')
     
     % Loop through files, reading in alpha-numeric order
     for ii = 1:s
-        READ = imread(strcat(Folder,'/',files(ii).name));
+        READ = imread(strcat(folder_in,filesep,files(ii).name));
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
         IMG(:,:,ii) = imfilter(double(READ(:,:,1)),filter_gauss,'replicate');
@@ -30,7 +48,7 @@ else
     filt_opt = {'none',[nan,nan],nan};
     % Loop through files, reading in alpha-numeric order
     for ii = 1:s
-        READ = imread(strcat(Folder,'/',files(ii).name));
+        READ = imread(strcat(folder_in,filesep,files(ii).name));
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
         IMG(:,:,ii) = double(READ(:,:,1));
@@ -51,6 +69,6 @@ for ii = 1:s
     save(filename,'cellIMG');
 end
 
-filename = 'IDIC_image*';
+filename = '*IDIC_image*';
 
 end

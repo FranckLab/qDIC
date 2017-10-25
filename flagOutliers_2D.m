@@ -1,5 +1,5 @@
 function [cc,normFluctValues] = flagOutliers_2D(u,cc,thr,epsilon)
-% u = flagOutliers(u,thr,epsilon) removes outliers using the universal
+% u = flagOutliers(u,cc,thr,epsilon) removes outliers using the universal
 % outlier test based on
 %
 % J. Westerweel and F. Scarano. Universal outlier detection for PIV data.
@@ -9,24 +9,23 @@ function [cc,normFluctValues] = flagOutliers_2D(u,cc,thr,epsilon)
 % -------------------------------------------------------------------------
 %   u: cell containing the input displacement field. (u{1:3} = {u_x, u_y,
 %   	u_mag})
+%   cc: cross-correlation diagnostic struct
 %   thr: theshold for passing residiual (default = 2)
 %   epsilon: fluctuation level due to cross-correlation (default = 0.1)
 %
 % OUTPUTS
 % -------------------------------------------------------------------------
-%   u: cell containing the displacement field with outliers removed
+%   cc: struct with flagged outliers in addition to diagnostics
 %   normFluctValues: normalized fluctuation values based on the universal
 %   outier test.
 %
 % NOTES
 % -------------------------------------------------------------------------
-% needs medFilt3 and John D'Errico's inpaint_nans3 
-% (http://www.mathworks.com/matlabcentral/fileexchange/4551-inpaint-nans)function. 
 %
 % For more information please see section 2.2.
 % If used please cite:
-% Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast 
-% iterative digital volume correlation algorithm for large deformations. 
+% Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast
+% iterative digital volume correlation algorithm for large deformations.
 % Experimental Mechanics. doi: 10.1007/s11340-014-9874-2
 
 % set default values
@@ -40,7 +39,7 @@ normFluct = cell(size(u));
 normFluctMag = zeros(size(u{1}));
 
 for i = 1:length(u)
-
+    
     [medianU{i}, normFluct{i}] = funRemoveOutliers(u{i},epsilon);
     normFluctMag = normFluctMag + normFluct{i}.^2;
 end
@@ -55,13 +54,6 @@ for i = 1:length(u)
     u_outlier{i}(outlierIdx) = nan;
     cc.u_outlier{i} = reshape(u_outlier{i},size(cc.max));
 end
-
-
-%
-% for i = 1:length(u),
-% %     u{i}(outlierIdx) = nan;
-%     u{i} = inpaint_nans(double(u{i}),0);
-% end
 
 end
 
