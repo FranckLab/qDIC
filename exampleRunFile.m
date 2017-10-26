@@ -81,7 +81,7 @@ if isempty(pool)
 end
 
 % Estimate displacements via IDIC
-[u, cc, dm, gridPoints] = funIDIC(filename, sSize, sSizeMin, runMode);
+[u, cc, dm, gridPoints, tSwitch] = funIDIC(filename, sSize, sSizeMin, runMode);
 % Save the results
 if exist(resultsFolder,'dir') ~= 7
     mkdir(resultsFolder)
@@ -120,8 +120,8 @@ else
     %Save relavent workspace variables
     save(strcat(resultsFolder,'results_qDIC.mat'),'u','cc','dm','gridPoints');
 end
-
-for ii = 1:length(u)
+%%
+for ii = 50:length(u)
 
    figure
    contourf(u{ii}{2}),colorbar,axis image

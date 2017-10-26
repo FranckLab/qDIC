@@ -1,4 +1,4 @@
-function [u, cc, dm, m] = funIDIC(varargin)
+function [u, cc, dm, m, tSwitch] = funIDIC(varargin)
 % u = funIDIC(filename, sSize, sSizeMin, runMode) is the main function that performs
 % IDIC on a time series of images.  
 % 
@@ -45,6 +45,7 @@ function [u, cc, dm, m] = funIDIC(varargin)
 %   cc: cross correlation metrics (warning, can be quite large)
 %   dm: final meshgrid spacing (8 by default)
 %   gridPoint: final meshgrid points
+%   tSwitch: switching point chosen for hybrid scheme
 % 
 % NOTES
 % -------------------------------------------------------------------------
