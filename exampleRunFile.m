@@ -120,13 +120,6 @@ else
     %Save relavent workspace variables
     save(strcat(resultsFolder,'results_qDIC.mat'),'u','cc','dm','gridPoints');
 end
-%%
-for ii = 50:length(u)
-
-   figure
-   contourf(u{ii}{2}),colorbar,axis image
-    
-end
     
 %% CLEAN UP
 %Clean up the current set of images from the cd
