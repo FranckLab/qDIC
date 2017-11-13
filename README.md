@@ -1,12 +1,12 @@
 The q-factor-based Digital Image Correlation Algorithm.
 
 ## Purpose
-The repository contains the MATLAB m-files for qDIC along with synthetic example images. The qDIC algorithm determines the 2D displacement fields between consecutive images or from a static reference image to a current image. 
+The repository contains the MATLAB m-files for qDIC along with synthetic example images. The qDIC algorithm determines 2D displacement fields between consecutive images or from a static reference image to a current image. 
 
 ## Running qDIC
 
 ### Software Requirement
-MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circimstances older versions may function using "interpn", but performance and/or accuracy may suffer.  Our development is currently under Matlab 20171 on CentOS 7 and Window 7 x64.
+MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circimstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a on CentOS 7 and Window 7 x64.
 
 ### Input Image Requirements
 * To check if the images have the required speckle pattern and intensity values for correlation please use our [DIC simulator](https://github.com/FranckLab/DIC-Simulator).
@@ -19,7 +19,6 @@ MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Tool
 1. Make sure that the main files are in the current (working) directory for MATLAB. 
 2. Copy the desired test images `test_images` directory as needed.
 3. Run the `exampleRunFile.m` file to get 2D displacement fields between the two images. Note that the displacement output is in an nx1x3 cell array.
-* We recommend that the input image size in each dimension be at least three times the size of the subset size. The default subset size is 64x64, so we recommend that the minimum input image size should be 192x192.
 
 ## Files
 * Function files
@@ -40,7 +39,7 @@ MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Tool
  - inpaint_nans.m
  - mirt2D_mexinterp.m  (Optional, not currently in use)
 
-* Example files to run basic DIC
+* Example files to run basic qDIC
  - exampleRunFile.m
  - img2mat.m
  - imageCropping.m
@@ -55,7 +54,7 @@ Please refer to [input image requirement](https://github.com/FranckLab/FIDIC#inp
 
 **Can I use qDIC for finding displacement fields in 3D images?**
 
-No. But you can use [FIDVC](https://github.com/FranckLab/FIDVC), this finds 3D displacements in 3D image stack.
+No. But you can use [FIDVC](https://github.com/FranckLab/FIDVC), this finds 3D displacements in 3D image stack (i.e. a volumetric image). We do not support any 3D-DIC (stereo) functionality.
 
 **Why does the example fail to run?**
 
