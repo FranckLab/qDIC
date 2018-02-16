@@ -1,4 +1,4 @@
-function [IMG,filename,filt_opt] = img2mat(folder_in,ext_in,smoothing,s)
+function [cellIMG,filename] = img2mat(folder_in,ext_in,smoothing,filt_opt,s)
 %Read images and write them out in .mat
 %
 % INPUTS
@@ -20,15 +20,19 @@ function [IMG,filename,filt_opt] = img2mat(folder_in,ext_in,smoothing,s)
 %
 
 %Load all of the files directory information
-files = dir(strcat('.',filesep,folder_in,filesep,'*',ext_in));
+files = dir(strcat(folder_in,filesep,'*',ext_in));
+
+loc = strcat(folder_in,filesep,'*',ext_in);
+if isempty(files)
+    fprintf('NO IMAGE FILES FOUND UNDER: %s \n',loc)
+end
 
 %Determine the number of files
-if nargin<4
+if nargin<5
     s = length(files);
 end
 
 if strcmp(smoothing,'on')
-    filt_opt = {'gaussian',[3,3],0.5};
     
     filter_gauss = fspecial(filt_opt{1},filt_opt{2},filt_opt{3});
     
@@ -37,7 +41,7 @@ if strcmp(smoothing,'on')
         READ = imread(strcat(folder_in,filesep,files(ii).name));
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
-        IMG(:,:,ii) = imfilter(double(READ(:,:,1)),filter_gauss,'replicate');
+        cellIMG{ii} = imfilter(double(READ(:,:,1)),filter_gauss,'replicate');
         
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
@@ -51,7 +55,7 @@ else
         READ = imread(strcat(folder_in,filesep,files(ii).name));
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
-        IMG(:,:,ii) = double(READ(:,:,1));
+        cellIMG{ii} = double(READ(:,:,1));
         
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
@@ -63,10 +67,10 @@ end
 
 %
 for ii = 1:s
-    cellIMG{1} = IMG(:,:,ii); %Make a new variable to hold the current
+    IMG{1} = cellIMG{ii}; %Make a new variable to hold the current
     %image, needed for "save" to work properly
-    filename = strcat(files(ii).name,'IDIC_image_',num2str(ii+999),'.mat');
-    save(filename,'cellIMG');
+    filename = strcat(files(ii).name(1:end-(length(ext_in)+1)),'_IDIC_image_',num2str(ii+999),'.mat');
+    save(filename,'IMG');
 end
 
 filename = '*IDIC_image*';

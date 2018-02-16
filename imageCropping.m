@@ -8,11 +8,11 @@ function [crop_nw_loc,folder_out,fmt] = imageCropping(folder_in,ext_in,sSize,max
 %   ext_in: image formate extention
 %   folder_in: folder containing orginal images
 %   sSize: interrogation window (subset) size
-%   max_def_index: string specifying where the max deformation occurs 
+%   max_def_index: string specifying where the max deformation occurs
 %                   use 'center' or 'c' for the center image,
 %                   'end' or 'e' for the last image,
 %                   'beginning' or 'b' for the first,
-%                   or specific with an integer 
+%                   or specific with an integer
 %   crop: string to specify whether to crop images, set to 'y' or 'yes' to crop
 % OUTPUTS
 % -------------------------------------------------------------------------
@@ -27,13 +27,7 @@ function [crop_nw_loc,folder_out,fmt] = imageCropping(folder_in,ext_in,sSize,max
 
 %Output variables
 fmt = 'tif';
-folder_out = strcat(folder_in,filesep,'cropped_images',filesep);
 ext_out = strcat('.',fmt);
-
-%Make a new output folder if none exists
-if exist(folder_out,'dir') ~= 7
-    mkdir(folder_out);
-end
 
 prefixes = cell(1,26^3);
 alphab = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o',...
@@ -51,11 +45,22 @@ end
 
 %% Read in image filenames
 files = dir(strcat(folder_in,filesep,'*',ext_in));
+loc = strcat(folder_in,filesep,'*',ext_in);
+if isempty(files)
+    fprintf('NO IMAGE FILES FOUND UNDER: %s \n',loc)
+end
 l = length(files);
 
 %% Get Cropping Region
-%% Get Cropping Region
 if strcmp(crop, 'yes')||strcmp(crop, 'y')
+    
+    
+    folder_out = strcat(folder_in,filesep,'cropped_images',filesep);
+    %Make a new output folder if none exists
+    if exist(folder_out,'dir') ~= 7
+        mkdir(folder_out);
+    end
+    
     if strcmp(max_def_idx,'center')||strcmp(max_def_idx,'c')
         im_loc = ceil(l/2);
     elseif strcmp(max_def_idx,'end')||strcmp(max_def_idx,'e')
@@ -80,29 +85,27 @@ if strcmp(crop, 'yes')||strcmp(crop, 'y')
     
     crop_nw_loc = [X_ss(1),Y_ss(1)];
     
-else
-    crop_nw_loc = [1,1];
-    X_ss(1) = 1;
-    X_ss(2) = size(imread(strcat(folder_in,filesep,files(1).name)),2);
-    Y_ss(1) = 1;
-    Y_ss(2) = size(imread(strcat(folder_in,filesep,files(1).name)),1);
+    %% Crop and write out files
     
-end
-
-%% Crop and write out files
-
-image_idx = 1:l;
-% Loop through files
-for ii = 1:length(image_idx)
-    READ = imread(strcat(folder_in,filesep,files(image_idx(ii)).name));
-    try
-    READ = rgb2gray(READ);
-    catch
+    image_idx = 1:l;
+    % Loop through files
+    for ii = 1:length(image_idx)
+        READ = imread(strcat(folder_in,filesep,files(image_idx(ii)).name));
+        try
+            READ = rgb2gray(READ);
+        catch
+        end
+        IMG = READ(Y_ss(1):Y_ss(2),X_ss(1):X_ss(2),1); %Cropped size from ginput
+        
+        dir_filename = strcat(folder_out,prefixes{image_idx(ii)},'_image_number_',...
+            num2str(image_idx(ii)),ext_out); %use prefix to ensure proper ordering
+        imwrite(IMG,dir_filename,fmt); %Write the file with the specified settings
     end
-    IMG = READ(Y_ss(1):Y_ss(2),X_ss(1):X_ss(2),1); %Cropped size from ginput
     
-    dir_filename = strcat(folder_out,prefixes{image_idx(ii)},'_image_number_',...
-        num2str(image_idx(ii)),ext_out); %use prefix to ensure proper ordering
-    imwrite(IMG,dir_filename,fmt); %Write the file with the specified settings
+else
+    
+    folder_out = folder_in;
+    fmt = ext_in;
+    crop_nw_loc = [1,1];
+    
 end
-
