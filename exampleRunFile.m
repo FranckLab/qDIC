@@ -47,9 +47,9 @@ clear; close all; clc;
 %set up runtime variables
 sSize = [64 64];
 sSizeMin = 16;
-runMode = 'h'; %use 'i' for incremental mode, 'c' for cumulative, and 'h' for hybrid
-ext_in = 'tif'; %Input image format
-folder_in = ['.',filesep,'example_images']; %Folder containing the images series
+runMode = 'c'; %use 'i' for incremental mode, 'c' for cumulative, and 'h' for hybrid
+ext_in = 'tiff'; %Input image format
+folder_in = ['.',filesep,'example_images',filesep,'Sample12']; %Folder containing the images series
 max_def_idx = 'b'; %Specify where the max deformation occurs
 %use 'center' or 'c' for the center image,
 %'end' or 'e' for the last image,
@@ -68,7 +68,8 @@ resultsFolder = ['.',filesep,'Results',filesep];
 numImages = 3; %use only first n images in the folder
 
 %Convert input images to .mat
-[~,filename] = img2mat(folder_out,ext_crp,'on'); %All images in "imagesFolder"
+filt_opt = {'gaussian',[3,3],0.5};
+[~,filename] = img2mat(folder_out,ext_crp,'on',filt_opt); %All images in "imagesFolder"
 % [cellIMG,filename] = img2mat(folder_out,ext_crp,'on',numImages); %Images 1 to
 
 %% RUNNING DIC
