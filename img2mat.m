@@ -1,4 +1,4 @@
-function [cellIMG,filename] = img2mat(folder_in,ext_in,smoothing,filt_opt,s)
+function [cellIMG,filename] = img2mat(folder_in,ext_in,smoothing,filt_opt,freq_img,s)
 %Read images and write them out in .mat
 %
 % INPUTS
@@ -8,6 +8,7 @@ function [cellIMG,filename] = img2mat(folder_in,ext_in,smoothing,filt_opt,s)
 %   folder_in: folder containing orginal images
 %   smoothing: on/off for Gaussian smoothing prefilter ([3,3],0.5)
 %   s: max number of images to use
+%   freq: frequency to sample the image stack
 %
 % OUTPUTS
 % -------------------------------------------------------------------------
@@ -28,7 +29,7 @@ if isempty(files)
 end
 
 %Determine the number of files
-if nargin<5
+if nargin<6
     s = length(files);
 end
 
@@ -37,11 +38,13 @@ if strcmp(smoothing,'on')
     filter_gauss = fspecial(filt_opt{1},filt_opt{2},filt_opt{3});
     
     % Loop through files, reading in alpha-numeric order
-    for ii = 1:s
+    cnt = 0;
+    for ii = 1:freq_img:s
+        cnt = cnt+1;
         READ = imread(strcat(folder_in,filesep,files(ii).name));
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
-        cellIMG{ii} = imfilter(double(READ(:,:,1)),filter_gauss,'replicate');
+        cellIMG{cnt} = imfilter(double(READ(:,:,1)),filter_gauss,'replicate');
         
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
@@ -49,13 +52,15 @@ if strcmp(smoothing,'on')
     end
     
 else
+    cnt = 0;
     filt_opt = {'none',[nan,nan],nan};
     % Loop through files, reading in alpha-numeric order
-    for ii = 1:s
+    for ii = 1:freq_img:s
+        cnt = cnt+1;
         READ = imread(strcat(folder_in,filesep,files(ii).name));
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
-        cellIMG{ii} = double(READ(:,:,1));
+        cellIMG{cnt} = double(READ(:,:,1));
         
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
@@ -66,7 +71,7 @@ end
 %     cellIMG = cell(1);
 
 %
-for ii = 1:s
+for ii = 1:length(cellIMG)
     IMG{1} = cellIMG{ii}; %Make a new variable to hold the current
     %image, needed for "save" to work properly
     filename = strcat(files(ii).name(1:end-(length(ext_in)+1)),'_IDIC_image_',num2str(ii+999),'.mat');
