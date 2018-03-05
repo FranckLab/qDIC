@@ -66,11 +66,11 @@ crop = 'no';
 resultsFolder = ['.',filesep,'Results',filesep];
 
 numImages = 3; %use only first n images in the folder
-
+spacing = 1;
 %Convert input images to .mat
 filt_opt = {'gaussian',[3,3],0.5};
-[~,filename] = img2mat(folder_out,ext_crp,'on',filt_opt); %All images in "imagesFolder"
-% [cellIMG,filename] = img2mat(folder_out,ext_crp,'on',numImages); %Images 1 to
+[~,filename] = img2mat(folder_out,ext_crp,'on',filt_opt,spacing); %All images in "imagesFolder"
+% [cellIMG,filename] = img2mat(folder_out,ext_crp,'on',filt_opt,spacing,numImages); %Images 1 to
 
 %% RUNNING DIC
 
