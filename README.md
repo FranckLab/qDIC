@@ -6,7 +6,7 @@ The repository contains the MATLAB m-files for qDIC along with synthetic example
 ## Running qDIC
 
 ### Software Requirement
-MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circimstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a on CentOS 7 and Window 7 x64.
+MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circumstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a on CentOS 7 and Window 7 x64.
 
 ### Input Image Requirements
 * To check if the images have the required speckle pattern and intensity values for correlation please use our [DIC simulator](https://github.com/FranckLab/DIC-Simulator).
@@ -58,7 +58,7 @@ No. But you can use [FIDVC](https://github.com/FranckLab/FIDVC), this finds 3D d
 
 **Why does the example fail to run?**
 
-In many cases where the example images fail to run, the minium specifications for MATLAB have not been met.
+In many cases where the example images fail to run, the minimum specifications for MATLAB have not been met.
 
 ## Cite
 If used please cite:
