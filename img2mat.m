@@ -8,7 +8,7 @@ function [cellIMG,filename] = img2mat(folder_in,ext_in,smoothing,filt_opt,freq_i
 %   folder_in: folder containing orginal images
 %   smoothing: on/off for Gaussian smoothing prefilter ([3,3],0.5)
 %   s: max number of images to use
-%   freq: frequency to sample the image stack
+%   freq_img: frequency to sample the image stack
 %
 % OUTPUTS
 % -------------------------------------------------------------------------

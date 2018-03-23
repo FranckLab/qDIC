@@ -58,20 +58,25 @@ No. But you can use [FIDVC](https://github.com/FranckLab/FIDVC), this finds 3D d
 
 **Why does the example fail to run?**
 
-In many cases where the example images fail to run, the minium specifications for MATLAB have not been met.
+In many cases where the example images fail to run, the minimum specifications for MATLAB have not been met.
 
 ## Cite
 If used please cite:
-[Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast iterative digital volume correlation algorithm for large deformations. Experimental Mechanics. doi: 10.1007/s11340-014-9874-2](http://link.springer.com/article/10.1007/s11340-014-9874-2?sa_campaign=email/event/articleAuthor/onlineFirst)
+[Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). https://doi.org/10.1007/s11340-018-0377-4)
 
 ```bibtex
-@article{bar2014fast,
-  title={A fast iterative digital volume correlation algorithm for large deformations},
-  author={Bar-Kochba, E and Toyjanova, J and Andrews, E and Kim, K-S and Franck, C},
-  journal={Experimental Mechanics},
-  pages={1--14},
-  year={2014},
-  publisher={Springer}
+@Article{Landauer2018,
+author="Landauer, AK
+and Patel, M
+and Henann, DL
+and Franck, C",
+title="A q-Factor-Based Digital Image Correlation Algorithm (qDIC) for Resolving Finite Deformations with Degenerate Speckle Patterns",
+journal="Experimental Mechanics",
+year="2018",
+issn="1741-2765",
+doi="10.1007/s11340-018-0377-4",
+url="https://doi.org/10.1007/s11340-018-0377-4"
+}
 }
 ```
 

@@ -39,6 +39,9 @@
 %   gridPoints: final measurement point meshgrid
 %
 % NOTES
+% Please cite
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% https://doi.org/10.1007/s11340-018-0377-4
 % -------------------------------------------------------------------------
 %% Set up workspace and images
 
@@ -66,11 +69,11 @@ crop = 'no';
 resultsFolder = ['.',filesep,'Results',filesep];
 
 numImages = 3; %use only first n images in the folder
-spacing = 1;
+spacing = 1; %spacing between images to using in input stack
 %Convert input images to .mat
 filt_opt = {'gaussian',[3,3],0.5};
 [~,filename] = img2mat(folder_out,ext_crp,'on',filt_opt,spacing); %All images in "imagesFolder"
-% [cellIMG,filename] = img2mat(folder_out,ext_crp,'on',filt_opt,spacing,numImages); %Images 1 to
+% [cellIMG,filename] = img2mat(folder_out,ext_crp,'on',spacing,numImages); %Images 1 to
 
 %% RUNNING DIC
 

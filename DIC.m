@@ -23,9 +23,8 @@ function [u, cc] = DIC(varargin)
 % all functions are self contained
 %
 % If used please cite:
-% Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast
-% iterative digital volume correlation algorithm for large deformations.
-% Experimental Mechanics. doi: 10.1007/s11340-014-9874-2
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% https://doi.org/10.1007/s11340-018-0377-4
 
 % Parse inputs and create meshgrid
 [I,m,mSize,sSize,sSizeFull,sSpacing,MTF,M,ccThreshold,norm_xcc] = ...

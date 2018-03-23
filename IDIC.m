@@ -26,9 +26,8 @@ function [u, cc, dm, mFinal, decorrFlag] = IDIC(varargin)
 % (http://www.mathworks.com/support/compilers/R2014a/index.html)
 %
 % If used please cite:
-% Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast
-% iterative digital volume correlation algorithm for large deformations.
-% Experimental Mechanics. doi: 10.1007/s11340-014-9874-2
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% https://doi.org/10.1007/s11340-018-0377-4
 
 % PRESET CONSTANTS
 maxIterations = 9; % maximum number of iterations

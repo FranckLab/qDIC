@@ -24,9 +24,8 @@ function [cc,normFluctValues] = flagOutliers_2D(u,cc,thr,epsilon)
 %
 % For more information please see section 2.2.
 % If used please cite:
-% Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast
-% iterative digital volume correlation algorithm for large deformations.
-% Experimental Mechanics. doi: 10.1007/s11340-014-9874-2
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% https://doi.org/10.1007/s11340-018-0377-4
 
 % set default values
 if nargin < 3, epsilon = 0.1; end

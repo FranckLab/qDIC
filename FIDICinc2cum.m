@@ -18,6 +18,9 @@ function [uCum] = FIDICinc2cum(u,tSwitch,dm,m,option)
 %   Outputs:
 %   -----------------------------------------------------------------------
 %     uCum: Updated cumulative field with same reference image.
+% If used please cite:
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% https://doi.org/10.1007/s11340-018-0377-4
 
 % Find first timepoint where reference image is updated
 idx = find(tSwitch>0,1,'first');
