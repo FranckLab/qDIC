@@ -52,7 +52,9 @@ function [u, cc, dm, m, tSwitch] = funIDIC(varargin)
 % none
 % 
 % For more information please see 
-%
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% https://doi.org/10.1007/s11340-018-0377-4
+
 
 %% ---- Opening & Reading the First Image into CPU Memory ----
 [fileInfo, sSize0, sSizeMin, runMode, u_] = parseInputs(varargin{:});

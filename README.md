@@ -6,7 +6,7 @@ The repository contains the MATLAB m-files for qDIC along with synthetic example
 ## Running qDIC
 
 ### Software Requirement
-MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circumstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a on CentOS 7 and Window 7 x64.
+MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circimstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a on CentOS 7 and Window 7 x64.
 
 ### Input Image Requirements
 * To check if the images have the required speckle pattern and intensity values for correlation please use our [DIC simulator](https://github.com/FranckLab/DIC-Simulator).
@@ -62,16 +62,21 @@ In many cases where the example images fail to run, the minium specifications fo
 
 ## Cite
 If used please cite:
-[Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast iterative digital volume correlation algorithm for large deformations. Experimental Mechanics. doi: 10.1007/s11340-014-9874-2](http://link.springer.com/article/10.1007/s11340-014-9874-2?sa_campaign=email/event/articleAuthor/onlineFirst)
+[Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). https://doi.org/10.1007/s11340-018-0377-4)
 
 ```bibtex
-@article{bar2014fast,
-  title={A fast iterative digital volume correlation algorithm for large deformations},
-  author={Bar-Kochba, E and Toyjanova, J and Andrews, E and Kim, K-S and Franck, C},
-  journal={Experimental Mechanics},
-  pages={1--14},
-  year={2014},
-  publisher={Springer}
+@Article{Landauer2018,
+author="Landauer, AK
+and Patel, M
+and Henann, DL
+and Franck, C",
+title="A q-Factor-Based Digital Image Correlation Algorithm (qDIC) for Resolving Finite Deformations with Degenerate Speckle Patterns",
+journal="Experimental Mechanics",
+year="2018",
+issn="1741-2765",
+doi="10.1007/s11340-018-0377-4",
+url="https://doi.org/10.1007/s11340-018-0377-4"
+}
 }
 ```
 

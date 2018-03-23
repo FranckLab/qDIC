@@ -32,9 +32,8 @@ function [converged01, SSE1 , sSize1, sSpacing1] = checkConvergenceSSD_2D(I,SSE,
 % default constants are based on empirical results.
 %
 % If used please cite:
-% Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast
-% iterative digital volume correlation algorithm for large deformations.
-% Experimental Mechanics. doi: 10.1007/s11340-014-9874-2
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% https://doi.org/10.1007/s11340-018-0377-4
 
 I{1}(isnan(I{1})) = 0;
 I{2}(isnan(I{2})) = 0;

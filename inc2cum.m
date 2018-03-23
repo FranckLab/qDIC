@@ -15,6 +15,9 @@ function [ucum] = inc2cum(u,dm,m,option)
 %   
 %   Outputs:
 %   u:  Cumulative displacement in the same format as input
+%If used please cite:
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% https://doi.org/10.1007/s11340-018-0377-4
 
 
 %% Parse Inputs
