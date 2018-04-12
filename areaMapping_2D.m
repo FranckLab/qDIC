@@ -1,7 +1,7 @@
 function I = areaMapping_2D(varargin)
 % I = areaMapping(I0,m,u0) symmetrically warps undeformed
 % and deformed 2-D images by the displacement field from previous iteration
-% using trilinear interpolation.
+% using spline interpolation.
 %
 % INPUTS
 % -------------------------------------------------------------------------
@@ -21,14 +21,15 @@ function I = areaMapping_2D(varargin)
 % NOTES
 % -------------------------------------------------------------------------
 % if interp2FastMex and mirt2D-mexinterp are used to perform the interpolation
-% since they are faster and less memory demanding than MATLAB's interp3
-% function. To run you need a compatible C compiler. Please see
+% they may be faster and less memory demanding than MATLAB's interpolation
+% functions. To run you need a compatible C compiler. Please see
 % (http://www.mathworks.com/support/compilers/R2014a/index.html)
 %
 % For more information please see section 2.2.
 % If used please cite:
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
-% https://doi.org/10.1007/s11340-018-0377-4
+% Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast 
+% iterative digital volume correlation algorithm for large deformations. 
+% Experimental Mechanics. doi: 10.1007/s11340-014-9874-2
 
 interp_opt = 'spline';
 inpaint_opt = 0;
