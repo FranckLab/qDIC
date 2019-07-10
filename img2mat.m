@@ -1,4 +1,4 @@
-function [cellIMG,filename] = img2mat(folder_in,ext_in,smoothing,filt_opt,freq_img,s)
+function [cellIMG,filename] = img2mat(folder_in,mat_file_save,ext_in,smoothing,filt_opt,freq_img,s)
 %Read images and write them out in .mat
 %
 % INPUTS
@@ -29,14 +29,14 @@ if isempty(files)
 end
 
 %Determine the number of files
-if nargin<6
+if nargin<7
     s = length(files);
 end
 
-if strcmp(smoothing,'on')
-
+if strcmp(smoothing,'yes')
+    
     filter_gauss = fspecial(filt_opt{1},filt_opt{2},filt_opt{3});
-
+    
     % Loop through files, reading in alpha-numeric order
     cnt = 0;
     for ii = 1:freq_img:s
@@ -45,12 +45,12 @@ if strcmp(smoothing,'on')
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
         cellIMG{cnt} = imfilter(double(READ(:,:,1)),filter_gauss,'replicate');
-
+        
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
         %         drawnow
     end
-
+    
 else
     cnt = 0;
     filt_opt = {'none',[nan,nan],nan};
@@ -61,23 +61,31 @@ else
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
         cellIMG{cnt} = double(READ(:,:,1));
-
+        
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
         %         drawnow
     end
-
+    
 end
 %     cellIMG = cell(1);
 
-%
-for ii = 1:length(cellIMG)
-    IMG{1} = cellIMG{ii}; %Make a new variable to hold the current
-    %image, needed for "save" to work properly
-    filename = strcat(files(ii).name(1:end-(length(ext_in)+1)),'_IDIC_image_',num2str(ii+999),'.mat');
-    save(filename,'IMG');
+% only save out if requested
+if strcmp(mat_file_save(1),'y')
+    for ii = 1:length(cellIMG)
+        IMG{1} = cellIMG{ii}; %Make a new variable to hold the current img
+        
+        %image, needed for "save" to work properly
+        filename = strcat(files(ii).name(1:end-(length(ext_in)+1)),...
+            '_IDIC_image_',num2str(ii+9999),'.mat');
+        save(filename,'IMG');
+    end
+    cellIMG = 'images save to disk';
+    filename = '*IDIC_image*';
+else
+    filename = files(1).name;
 end
 
-filename = '*IDIC_image*';
+
 
 end

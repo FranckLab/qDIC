@@ -57,49 +57,66 @@ function [u, cc, dm, m, tSwitch] = funIDIC(varargin)
 
 
 %% ---- Opening & Reading the First Image into CPU Memory ----
-[fileInfo, sSize0, sSizeMin, runMode, u_] = parseInputs(varargin{:});
-I{1} = loadFile(fileInfo,1);
+[imgInfo, sSize0, sSizeMin, runMode, u_] = parseInputs(varargin{:});
+if iscell(imgInfo)
+    I{1} = imgInfo{1};
+    numImages = length(imgInfo);
+else
+    I{1} = loadFile(imgInfo,1);
+    numImages = length(imgInfo.filename);
+end
 
 %% ---- Opening and Reading Subsequent Images ---
-numImages = length(fileInfo.filename);
 u = cell(numImages-1,1);
 cc = cell(numImages-1,1);
 
 for i = 2:numImages % Reads images starting on the second image
     tStart = tic;
-    I{2} = loadFile(fileInfo,i);
-
+    
+    if iscell(imgInfo)
+        I{2} = imgInfo{i};
+        fprintf('Current image: %i\n', i)
+    else
+        I{2} = loadFile(imgInfo,i);
+        disp(['Current file: ' imgInfo.filename{i}])
+    end
+    
     %Start DIC
-    disp(['Current file: ' fileInfo.filename{i}])
+    
     [u_,cc{i-1},dm,m,tSwitch(i-1)] = IDIC(I,sSize0,sSizeMin,u_);
-
+    
     %Save iterations of DIC
     u{i-1}{1} = -u_{1};  u{i-1}{2} = -u_{2}; u{i-1}{3} = u_{3};
-
+    
     if strcmpi(runMode(1),'i') == 1 % Incremental mode
         I{1} = I{2}; % Update reference image
         u_ = num2cell(zeros(1,3)); % No predictor displacement in next time step
     end
-
+    
     if strcmpi(runMode(1),'h') == 1 % If hybrid mode
         if tSwitch(end) == 1
             disp('Updating reference image due to poor correlation.')
             disp('Rerunning DIC on the time step')
-            I{1} = loadFile(fileInfo,i-1); %Update reference image
+            
+            if iscell(imgInfo)
+                I{1} = imgInfo{i-1};
+            else
+                I{1} = loadFile(imgInfo,i-1); %Update reference image
+            end
+            
             u_ = num2cell(zeros(1,3)); % No predictor displacement in next time step
-
+            
             % Run DIC again on updated time step
             [u_,cc{i-1},dm,m,tSwitch(i-1)] = IDIC(I,sSize0,sSizeMin,u_);
             tSwitch(i-1) = tSwitch(i-1) + 1;
-
+            
             %Save iterations of DIC
             u{i-1}{1} = -u_{1};  u{i-1}{2} = -u_{2}; u{i-1}{3} = u_{3};
         end
     end
-
-    disp(['Elapsed Time for all iterations: ',num2str(toc(tStart))]);
-
 end
+
+disp(['Elapsed Time for all iterations: ',num2str(toc(tStart))]);
 
 if strcmpi(runMode(1),'h') == 1
     % Update displacement for to cumulative
@@ -129,24 +146,26 @@ end
 function varargout = parseInputs(varargin)
 %  = parseInputs(filename, sSize, incORcum)
 
-
-% Parse filenames
-filename = varargin{1};
-if iscell(filename)
-    if length(filename) == 1
-        fileInfo.datachannel = 1;
-    else
-        fileInfo.datachannel = filename{2};
+if ~ischar(varargin{1}(1))
+    varargout{1} = varargin{1};
+else
+    % Parse filenames
+    filename = varargin{1};
+    if iscell(filename)
+        if length(filename) == 1
+            fileInfo.datachannel = 1;
+        else
+            fileInfo.datachannel = filename{2};
+        end
+        filename = filename{1};
     end
-    filename = filename{1};
+    [~,filename,~] = fileparts(filename);
+    filename = dir([filename,'.mat']);
+    fileInfo.filename = {filename.name};
+    
+    if isempty(fileInfo), error('File name doesn''t exist'); end
+    varargout{1} = fileInfo;
 end
-
-
-[~,filename,~] = fileparts(filename);
-filename = dir([filename,'.mat']);
-fileInfo.filename = {filename.name};
-
-if isempty(fileInfo), error('File name doesn''t exist'); end
 
 % Ensure dimensionality of the subset size
 sSize = varargin{2};
@@ -158,7 +177,7 @@ end
 
 % Ensure range of subset size
 if min(sSize) < 32 || max(sSize > 128)
-   error('Subset size must be within 32 and 128 pixels');
+    error('Subset size must be within 32 and 128 pixels');
 end
 
 % Ensure even subset size
@@ -191,11 +210,11 @@ end
 
 % Initial guess of displacement field = [0 0];
 u0 = num2cell(zeros(1,2));
+
 % Outputs
-varargout{      1} = fileInfo;
 varargout{end + 1} = sSize;
 varargout{end + 1} = sSizeMin;
 varargout{end + 1} = runMode;
-varargout{end+1} = u0;
+varargout{end + 1} = u0;
 
 end
