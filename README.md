@@ -1,12 +1,14 @@
 The q-factor-based Digital Image Correlation Algorithm.
 
 ## Purpose
-The repository contains the MATLAB m-files for qDIC along with synthetic example images. The qDIC algorithm determines 2D displacement fields between consecutive images or from a static reference image to a current image. 
+The repository contains the MATLAB m-files for qDIC along with synthetic example images. The qDIC algorithm determines 2D displacement fields between consecutive images or from a static reference image to a current image.
 
 ## Running qDIC
 
 ### Software Requirement
-MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circumstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a on CentOS 7 and Window 7 x64.
+MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circumstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a on CentOS 7 and Windows 7/10 x64.
+
+A "basic" version is available (in beta) that supports base Matlab (i.e., with no Toolboxs) with similar performance from https://github.com/ALandauer/qDICb. 
 
 ### Input Image Requirements
 * To check if the images have the required speckle pattern and intensity values for correlation please use our [DIC simulator](https://github.com/FranckLab/DIC-Simulator).
@@ -16,7 +18,7 @@ MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Tool
 * Out-of-the-box qDIC supports most common Matlab-readable images with `img2mat.m`, other file formats require simple modification
 
 ### Running including example case
-1. Make sure that the main files are in the current (working) directory for MATLAB. 
+1. Make sure that the main files are in the current (working) directory for MATLAB.
 2. Copy the desired test images `test_images` directory as needed.
 3. Run the `exampleRunFile.m` file to get 2D displacement fields between the two images. Note that the displacement output is in an nx1x3 cell array.
 
@@ -81,4 +83,4 @@ url="https://doi.org/10.1007/s11340-018-0377-4"
 ```
 
 ## Contact and support
-For questions, please first refer to [FAQ](https://github.com/FranckLab/FIDIC#faq) and [Questions/Issues](https://github.com/FranckLab/FIDIC/issues). Add a new question if similar issue hasn't been reported. We shall help you at the earliest. The author's contact information can be found at [Franck Lab](http://franck.engin.brown.edu).
+For questions, please first refer to [FAQ](https://github.com/FranckLab/qDIC#faq) and [Questions/Issues](https://github.com/FranckLab/qDIC/issues) or the same for FIDVC (shared code for many functions, so certain questions will translate between the two). Add a new question if similar issue hasn't been reported. We will try to help you as soon as possible. The author's contact information can be found at [Franck Lab](https://www.franck.engr.wisc.edu/).
