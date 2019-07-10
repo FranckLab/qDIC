@@ -23,7 +23,7 @@ A "basic" version is available (in beta) that supports base Matlab (i.e., with n
 3. Run the `exampleRunFile.m` file to get 2D displacement fields between the two images. Note that the displacement output is in an nx1x3 cell array.
 
 ## Files
-* Function files
+Function files
  - addDisplacements_2D.m
  - checkConvergenceSSD_2D.m
  - DIC.m
@@ -37,11 +37,11 @@ A "basic" version is available (in beta) that supports base Matlab (i.e., with n
  - replaceOutliers_2D.m
  - areaMapping_2D.m
 
-* Supplemental .m files from the MATLAB file exchange:
+Supplemental .m files from the MATLAB file exchange:
  - inpaint_nans.m
  - mirt2D_mexinterp.m  (Optional, not currently in use)
 
-* Example files to run basic qDIC
+Example files to run basic qDIC
  - exampleRunFile.m
  - img2mat.m
  - imageCropping.m
