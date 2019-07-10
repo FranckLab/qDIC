@@ -1,14 +1,14 @@
 function I = areaMapping_2D(varargin)
 % I = areaMapping(I0,m,u0) symmetrically warps undeformed
 % and deformed 2-D images by the displacement field from previous iteration
-% using spline interpolation.
+% using trilinear interpolation.
 %
 % INPUTS
 % -------------------------------------------------------------------------
 %   I0: cell containing the undeformed, I0{1}, and deformed, I0{2} images
 %   m: meshgrid of the displacement field
-%   u0: displacement field vector defined at every meshgrid point with 
-%      spacing dm. Format: cell array, each containing a 2D matrix 
+%   u0: displacement field vector defined at every meshgrid point with
+%      spacing dm. Format: cell array, each containing a 2D matrix
 %         (components in x,y,z)
 %         u0{1} = displacement in x-direction
 %         u0{2} = displacement in y-direction
@@ -21,15 +21,14 @@ function I = areaMapping_2D(varargin)
 % NOTES
 % -------------------------------------------------------------------------
 % if interp2FastMex and mirt2D-mexinterp are used to perform the interpolation
-% they may be faster and less memory demanding than MATLAB's interpolation
-% functions. To run you need a compatible C compiler. Please see
+% since they are faster and less memory demanding than MATLAB's interp3
+% function. To run you need a compatible C compiler. Please see
 % (http://www.mathworks.com/support/compilers/R2014a/index.html)
 %
 % For more information please see section 2.2.
 % If used please cite:
-% Bar-Kochba E., Toyjanova J., Andrews E., Kim K., Franck C. (2014) A fast 
-% iterative digital volume correlation algorithm for large deformations. 
-% Experimental Mechanics. doi: 10.1007/s11340-014-9874-2
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
+% https://doi.org/10.1007/s11340-018-0377-4
 
 interp_opt = 'spline';
 inpaint_opt = 0;
@@ -53,14 +52,14 @@ for i = 1:2
     %u{i} = mirt2D_mexinterp(u0{i}, m_u0{1}, m_u0{2}); %Uses cpp for
                                                         %interpolation, minor
                                                         %performance gain at
-                                                        %the cost of using a mex 
+                                                        %the cost of using a mex
 end
 %% Warp images (see eq. 8)
 mForward = cellfun(@(x,y) x + y, m, u, 'UniformOutput',false);
 mBackward = cellfun(@(x,y) x - y, m, u, 'UniformOutput',false);
 
 % interpolate images based on the deformation
-% 
+%
 I{1} = inpaint_nans(interp2(I0{1},mForward{1}, mForward{2},interp_opt),inpaint_opt);
 I{2} = inpaint_nans(interp2(I0{2},mBackward{1}, mBackward{2},interp_opt),inpaint_opt);
 

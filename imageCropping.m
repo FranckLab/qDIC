@@ -53,14 +53,14 @@ l = length(files);
 
 %% Get Cropping Region
 if strcmp(crop, 'yes')||strcmp(crop, 'y')
-    
-    
+
+
     folder_out = strcat(folder_in,filesep,'cropped_images',filesep);
     %Make a new output folder if none exists
     if exist(folder_out,'dir') ~= 7
         mkdir(folder_out);
     end
-    
+
     if strcmp(max_def_idx,'center')||strcmp(max_def_idx,'c')
         im_loc = ceil(l/2);
     elseif strcmp(max_def_idx,'end')||strcmp(max_def_idx,'e')
@@ -82,11 +82,11 @@ if strcmp(crop, 'yes')||strcmp(crop, 'y')
     Y_ss(1) = Y(1);% - mod(Y(1),max(sSize))+max(sSize);
     Y_ss(2) = Y(2);% - mod(Y(2),max(sSize));
     close
-    
+
     crop_nw_loc = [X_ss(1),Y_ss(1)];
-    
+
     %% Crop and write out files
-    
+
     image_idx = 1:l;
     % Loop through files
     for ii = 1:length(image_idx)
@@ -96,16 +96,16 @@ if strcmp(crop, 'yes')||strcmp(crop, 'y')
         catch
         end
         IMG = READ(Y_ss(1):Y_ss(2),X_ss(1):X_ss(2),1); %Cropped size from ginput
-        
+
         dir_filename = strcat(folder_out,prefixes{image_idx(ii)},'_image_number_',...
             num2str(image_idx(ii)),ext_out); %use prefix to ensure proper ordering
         imwrite(IMG,dir_filename,fmt); %Write the file with the specified settings
     end
-    
+
 else
-    
+
     folder_out = folder_in;
     fmt = ext_in;
     crop_nw_loc = [1,1];
-    
+
 end

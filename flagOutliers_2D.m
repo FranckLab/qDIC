@@ -24,7 +24,7 @@ function [cc,normFluctValues] = flagOutliers_2D(u,cc,thr,epsilon)
 %
 % For more information please see section 2.2.
 % If used please cite:
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 
 % set default values
@@ -38,7 +38,7 @@ normFluct = cell(size(u));
 normFluctMag = zeros(size(u{1}));
 
 for i = 1:length(u)
-    
+
     [medianU{i}, normFluct{i}] = funRemoveOutliers(u{i},epsilon);
     normFluctMag = normFluctMag + normFluct{i}.^2;
 end

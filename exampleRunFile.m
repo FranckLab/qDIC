@@ -40,7 +40,7 @@
 %
 % NOTES
 % Please cite
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 % -------------------------------------------------------------------------
 %% Set up workspace and images
@@ -51,8 +51,8 @@ clear; close all; clc;
 sSize = [64 64];
 sSizeMin = 16;
 runMode = 'c'; %use 'i' for incremental mode, 'c' for cumulative, and 'h' for hybrid
-ext_in = 'tiff'; %Input image format
-folder_in = ['.',filesep,'example_images',filesep,'Sample12']; %Folder containing the images series
+ext_in = 'tif'; %Input image format
+folder_in = ['.',filesep,'example_images']; %Folder containing the images series
 max_def_idx = 'b'; %Specify where the max deformation occurs
 %use 'center' or 'c' for the center image,
 %'end' or 'e' for the last image,
@@ -117,14 +117,14 @@ if no_im == 0
     fprintf('Measurement res, x    %0.2g\n   ',meas_res(1));
     fprintf('Measurement res, y    %0.2g\n',meas_res(2));
     fprintf('-----------------------------------------\n');
-    
+
     %Save relavent workspace variables
     save(strcat(resultsFolder,'results_qDIC.mat'),'u','cc','dm','gridPoint','reporting_table');
 else
     %Save relavent workspace variables
     save(strcat(resultsFolder,'results_qDIC.mat'),'u','cc','dm','gridPoints');
 end
-    
+
 %% CLEAN UP
 %Clean up the current set of images from the cd
 delete *IDIC_image*.mat

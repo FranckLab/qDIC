@@ -19,7 +19,7 @@ function [uCum] = FIDICinc2cum(u,tSwitch,dm,m,option)
 %   -----------------------------------------------------------------------
 %     uCum: Updated cumulative field with same reference image.
 % If used please cite:
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 
 % Find first timepoint where reference image is updated
@@ -29,18 +29,18 @@ uCum = u(1:idx-1);
 if isempty(idx)
     uCum = u;
 else
-    
+
     % Loop through all timepoints after first timepoint where reference image
     % is updated
     for i = idx:length(u)
-        
+
         %uTemp stores displacement in a format to utilize converstion between
         %incremental to cumulative displacment.
         %uTemp{1} stores value of cumulative displacement till the last
         %timepoint where the reference image is updated.
         %uTemp{2}: Cumulative displacement calculated at current timepoint wrt
         %updated reference image
-        
+
         if tSwitch(i) >= 1
             if i == 1
                 uTemp{1} = cell(1,2);
@@ -51,7 +51,7 @@ else
                 uTemp{1} = uCum{i-1};
             end
         end
-        
+
         uTemp{2} = u{i};
         [uTemp] = inc2cum(uTemp,dm,m,option);
         uCum{i} = uTemp{2};

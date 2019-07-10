@@ -26,7 +26,7 @@ function [u, cc, dm, mFinal, decorrFlag] = IDIC(varargin)
 % (http://www.mathworks.com/support/compilers/R2014a/index.html)
 %
 % If used please cite:
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 
 % PRESET CONSTANTS
@@ -56,12 +56,12 @@ while ~converged01 && i - 1 < maxIterations
     % Check for convergence
     [converged01, SSE(i-1) , sSize(i,:), sSpacing(i,:)] = ...
         checkConvergenceSSD_2D(I,SSE,sSize,sSizeMin,sSpacing,convergenceCrit);
-    
+
     if ~converged01
-        
+
         finalSize = sSize(i,:);
         [I, m] = parseImages(I,sSize(i,:),sSpacing(i,:));
-        
+
         %warp images with displacement guess if a cumulative step
         if i == 2 %only on the first iteration
             if numel(u{1}) == 1 %on the first image the disp guess is zero
@@ -75,34 +75,34 @@ while ~converged01 && i - 1 < maxIterations
 %             u{1} = 0; %reset disp to zero
 %             u{2} = 0;
         end
-        
+
         % run cross-correlation to get an estimate of the displacements
         [du, cc{i-1}] = DIC(I,sSize,sSpacing(i,:),DICPadSize,ccThreshold,norm_xcc);
 
         % add the displacements from previous iteration to current
         [u, ~, cc{i-1}, mFinal] = addDisplacements_2D(u,du,cc{i-1},cc{i-1},m,dm);
-        
+
         % filter the displacements using a predictor filter
         u = filterDisplacements_2D(u,sSize(i,:)/dm);
         cc{i-1} = flagOutliers_2D(u,cc{i-1},1.25,0.1);
-        
+
         % remove questionable displacement points
         [u,cc{i-1}.alpha_mask,cc{i-1}.nan_mask,cc{i-1}.edge_pts] = replaceOutliers_2D(u,cc{i-1});
-        
+
         % mesh and pad images based on new subset size and spacing
         [I, m] = parseImages(I0,sSize(i,:),sSpacing(i,:));
-        
+
         % map areas based on displacment field
         I = areaMapping_2D(I,m,u);
-        
+
         if sum(isnan(u{1}(:)+isnan(u{2}(:)))) > 0 || sum(isnan(I{1}(:)+isnan(I{2}(:)))) > 0
             disp('nan found')
         end
-        
+
         disp(['Elapsed time (iteration ',num2str(i-1),'): ',num2str(toc(ti))]);
         i = i + 1;
     end
-    
+
 end
 
 %prepare outputs
@@ -295,21 +295,21 @@ end
 % do the st dev based thresholding
 complete_qfactors = cc{end}.qfactors(3:4,:);
 for ii = 1:size(complete_qfactors,1)
-    
+
     x = sort(complete_qfactors(ii,:));
-    
+
     %do the parameter estimation
     options = statset('MaxIter',2000, 'MaxFunEvals',4000);
     % options.FunValCheck = 'off';
-    
+
     %     disp('Parameters estimated for single peak Gaussian')
     paramEsts = mle(x,'options',options);%,'optimfun','fmincon'
     paramEsts = [0.5,paramEsts(1),paramEsts(1),paramEsts(2),...
         paramEsts(2)];
-    
+
     qfactor_fit_means(ii) = paramEsts(3);
     qfactor_fit_stds(ii) = paramEsts(5);
-    
+
 end
 
 if cc{end}.sSize(1) == 16

@@ -29,7 +29,7 @@ function [u, du, cc, m] = addDisplacements_2D(u0,du0,cc,cc0,m0,dm)
 % -------------------------------------------------------------------------
 %
 % If used please cite:
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 interp_opt = 'spline';
 inpaint_opt = 0;
@@ -47,10 +47,10 @@ du = cell(1,2);
 for i = 1:2
     F = griddedInterpolant(m0_{1}, m0_{2}, du0{i}, interp_opt);
     du{i} = F(m{1},m{2});
-    
+
     F_qf = griddedInterpolant(m0_{1}, m0_{2}, cc0.qfactors_accept{i}, 'nearest');
     cc.qfactors_accept{i} = F_qf(m{1},m{2});
-    
+
 end
 
 F_cc = griddedInterpolant(m0_{1}, m0_{2}, cc0.max, interp_opt);

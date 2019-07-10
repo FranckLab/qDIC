@@ -34,9 +34,9 @@ if nargin<6
 end
 
 if strcmp(smoothing,'on')
-    
+
     filter_gauss = fspecial(filt_opt{1},filt_opt{2},filt_opt{3});
-    
+
     % Loop through files, reading in alpha-numeric order
     cnt = 0;
     for ii = 1:freq_img:s
@@ -45,12 +45,12 @@ if strcmp(smoothing,'on')
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
         cellIMG{cnt} = imfilter(double(READ(:,:,1)),filter_gauss,'replicate');
-        
+
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
         %         drawnow
     end
-    
+
 else
     cnt = 0;
     filt_opt = {'none',[nan,nan],nan};
@@ -61,12 +61,12 @@ else
         %store the image, and do a small amount of gaussian blurring to
         %improve contrast gradients
         cellIMG{cnt} = double(READ(:,:,1));
-        
+
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
         %         drawnow
     end
-    
+
 end
 %     cellIMG = cell(1);
 

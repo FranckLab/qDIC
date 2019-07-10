@@ -23,7 +23,7 @@ function [u, cc] = DIC(varargin)
 % all functions are self contained
 %
 % If used please cite:
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 
 % Parse inputs and create meshgrid
@@ -46,30 +46,30 @@ I{2} = I{2}+noise;
 A = cell(1,mSize_);
 
 if strcmp(norm_xcc,'n')||strcmp(norm_xcc,'norm')||strcmp(norm_xcc,'normalized')
-    
+
     parfor k = 1:mSize_
-        
+
         %-----------------------------------------------------------------------
         % grab the moving subset from the images
         subst = I{1}(m{1}(k,:),m{2}(k,:));
         B = I{2}(m{1}(k,:),m{2}(k,:));
         %     size_sbst = size(subst);
-        
+
         % multiply by the modular transfer function to alter frequency content
         subst = MTF.*subst; B = MTF.*B;
-        
+
         % run cross-correlation
         A_ = normxcorr2(subst,B);
         A_small = A_(size(B,1)/2:size(B,1)+size(B,1)/2-1, ...
             size(B,2)/2:size(B,2)+size(B,2)/2-1);
         A{k} = imrotate(A_small,180);
-       
+
         % find maximum index of the cross-correlaiton
         [max_val(k), maxIdx{k}] = max(A{k}(:));
-        
+
         % compute pixel resolution displacements
         [u1, u2] = ind2sub(sSize,maxIdx{k});
-        
+
         % gather the 3x3 pixel neighborhood around the peak
         try xCorrPeak = reshape(A{k}(u1 + (-1:1), u2 + (-1:1)),9,1);
             % least squares fitting of the peak to calculate sub-pixel disp
@@ -80,30 +80,30 @@ if strcmp(norm_xcc,'n')||strcmp(norm_xcc,'norm')||strcmp(norm_xcc,'normalized')
             u12(k,:) = nan;
         end
     end
-    
+
 else
     parfor k = 1:mSize_
-        
+
         %-----------------------------------------------------------------------
         % grab the moving subset from the images
         subst = I{1}(m{1}(k,:),m{2}(k,:));
         B = I{2}(m{1}(k,:),m{2}(k,:));
         %     size_sbst = size(subst);
-        
-        
+
+
         % multiply by the modular transfer function to alter frequency content
         subst = MTF.*subst; B = MTF.*B;
         A{k} = xCorr2(subst,B,sSize); %Custom fft-based correllation - fast,
         %but not normalized. Be careful using this
         %if there is a visable intensity gradient in
         %an image
-        
+
         % find maximum index of the cross-correlaiton
         [max_val(k), maxIdx{k}] = max(A{k}(:));
-        
+
         % compute pixel resolution displacements
         [u1, u2] = ind2sub(sSize,maxIdx{k});
-        
+
         % gather the 3x3 pixel neighborhood around the peak
         try xCorrPeak = reshape(A{k}(u1 + (-1:1), u2 + (-1:1)),9,1);
             % least squares fitting of the peak to find sub-pixel disp
@@ -113,10 +113,10 @@ else
         catch
             u12(k,:) = nan;
         end
-        
+
     end
-    
-    
+
+
 end
 
 cc.A = A;
@@ -281,48 +281,48 @@ function varargout = generateMTF(sSize)
 
 if prod(single(sSize == 16)) || prod(single(sSize == 32)) || prod(single(sSize == 64))
     sSize = sSize(1);
-    
+
     x = cell(1,2);
     [x{1}, x{2}] = meshgrid(1:sSize,1:sSize);
-    
+
     nu{1} = 1;
     for i = 1:2
         x{i} = x{i} - sSize/2 - 0.5;
         x{i} = abs(x{i}/sSize);
         nu{1} = nu{1}.*(3*(4*x{i}.^2-4*x{i}+1));
     end
-    
+
     %% equation 5
     [x{1}, x{2}] = meshgrid(1:sSize,1:sSize);
-    
+
     for i = 1:2, x{i} = x{i} - sSize/2 - 0.5; end
-    
+
     r = abs(sqrt(x{1}.^2 + x{2}.^2)/sSize);
     nu{2}  = zeros(size(r));
     nu{2}(r < 0.5) = 24/pi*(4*r(r < 0.5).^2-4*r(r < 0.5)+1);
-    
+
     %% equation 6
     [x{1}, x{2}] = meshgrid(1:sSize,1:sSize);
-    
+
     nu{3} = 1;
     for i = 1:2
         x{i} = x{i} - sSize/2 - 0.5;
         x{i} = (x{i}/sSize);
-        
+
         nu{3} = nu{3}.*(12*abs(x{i}).^2 - 12*abs(x{i}) + 3 + ...
             0.15*cos(4*pi*x{i}) + 0.20*cos(6*pi*x{i}) + ...
             0.10*cos(8*pi*x{i}) + 0.05*cos(10*pi*x{i}));
-        
+
     end
     nu{3}(nu{3} < 0) = 0;
-    
+
 else
-    
+
     nu{1} = ones(sSize(1),sSize(2));
     nu{2} = nu{1};
     nu{3} = nu{1};   %==== Based on the usage and the paper this comes from
     %nu should remain 3-dims even for the 2D case
-    
+
 end
 
 nu = cellfun(@(x) x/sum(x(:)), nu, 'UniformOutput',0);
@@ -338,20 +338,20 @@ function [cc, ccMask] = ...
 % flag bad correlation points, using q-factor analysis
 
 if strcmp(norm_xcc,'n')||strcmp(norm_xcc,'norm')||strcmp(norm_xcc,'normalized')
-    
+
     ccMask = ones(size(cc.max));
-    
+
     for k = 1:mSize_
-        
+
         cc_min = cc.A{k};% - min(cc.A{k}(:));, not needed since this is nxcc
-        
+
         phi = sort(cc_min(:));
-        
+
         P_img = imregionalmax(cc_min);
-        
+
         peaks = unique(cc_min(P_img)); %some can be non-unique,
         %but this means its a bad xcc
-        
+
         %compute several quality metrics, as given in "Xue Z, Particle Image
         % Velocimetry Correlation Signal-to-noise Metrics, Particle Image
         % Pattern Mutual Information and Measurement uncertainty Quantification.
@@ -364,11 +364,11 @@ if strcmp(norm_xcc,'n')||strcmp(norm_xcc,'norm')||strcmp(norm_xcc,'normalized')
         end
         prmsr = ((peaks(end)^2)/(rms(phi(phi<phi(end)/2))^2)); %peak to RMS ratio (NOT USED)
         %min value = 2; (worst case)
-        
+
         %peak to corr. energy ratio
         pce = ((peaks(end)^2)/(1/numel(phi)*(sum(abs(phi(:).^2)))));
         %min value -> 1 (worst case)
-        
+
         [cc_hist,~] = histcounts(cc_min,30);
         entropy = 0;
         for i = 1:30
@@ -379,55 +379,55 @@ if strcmp(norm_xcc,'n')||strcmp(norm_xcc,'norm')||strcmp(norm_xcc,'normalized')
                 entropy = entropy+p(i)*log(1/p(i));
             end
         end
-        
+
         ppe = 1/entropy; %peak to cc (information) entropy
         %min value -> 0 (worst case)
-        
+
         qfactors_(:,k) = [ppr,prmsr,pce,ppe];
-        
+
     end
-    
+
     for k = 1:size(qfactors_,1)
         qf_ = (qfactors_(k,:)-min(qfactors_(k,:)));
         cc.qfactors(k,:) = qf_/max(qf_);
     end
-    
+
     if sizeChange == 1
         %recompute threshold, only use pce & ppe since these give the best
         %results emprically.
-        
+
         stdev_prefact = 1.00;
-        
+
         for ii = 1:2
-            
+
             [qf_para{ii},single_distro] = bimodal_gauss_fit(cc.qfactors(2+ii,:));
-            
+
             if single_distro == 0%(qf_para{ii}(2) + 2*qf_para{ii}(4)) < (qf_para{ii}(3) - 2*qf_para{ii}(5))
                 cc.q_thresh{ii} = qf_para{ii}(3) - stdev_prefact*qf_para{ii}(5);
             elseif single_distro == 1
                 cc.q_thresh{ii} = qf_para{ii}(3) - stdev_prefact*qf_para{ii}(5);
             else
                 cc.q_thresh{ii} = qf_para{ii}(3) - stdev_prefact*qf_para{ii}(5);
-            end 
+            end
         end
         q_trim = [cc.q_thresh{1};cc.q_thresh{2}];
     else
         q_trim = [cc.q_thresh{1};cc.q_thresh{2}];
     end
-    
+
     %NaN the qfactor values that are below the threshold
     temp = bsxfun(@le,cc.qfactors(3:4,:),q_trim);
     qfactors_accept = cc.qfactors(3:4,:);
     qfactors_accept(temp) = NaN;
-        
+
     for ii = 1:2
         cc.qfactors_accept{ii} = reshape(double(qfactors_accept(ii,:)),mSize);
         %         cc.U95_accept{ii} = reshape(double(U95_accept(ii,:)),mSize);
     end
-    
+
     ccMask = ones(size(qfactors_accept)) + ...
         zeros(size(qfactors_accept)).*qfactors_accept;
-    
+
 else
     minOS = 1;
     for i = 1:2
@@ -439,7 +439,7 @@ else
     cc.max = cc.max - minOS;
     cc.max = cc.max/(max(I{1}(:))*max(I{2}(:)));
     ccMask = double(cc.max >= ccThreshold);
-    
+
     CC = bwconncomp(~ccMask);
     if length(CC.PixelIdxList) > 0
         [~,idx] = max(cellfun(@numel,CC.PixelIdxList));
@@ -448,7 +448,7 @@ else
     ccMask(cc.max == 0) = nan;
     ccMask(~isfinite(ccMask)) = 0;
     cc = cc.max.*ccMask;
-    
+
 end
 
 end
@@ -486,18 +486,18 @@ try
     single_distro = 0;
     paramEsts = mle(x, 'pdf',pdf_normmixture, 'start',start, ...
         'lower',lb, 'upper',ub, 'options',options);%,'optimfun','fmincon'
-    
+
     if paramEsts(2)-paramEsts(4) >= paramEsts(3)+paramEsts(5) || ...
             paramEsts(2)+paramEsts(4) <= paramEsts(3)-paramEsts(5)
-        
+
         single_distro = 1;
         %     disp('Parameters estimated for single peak Gaussian')
         paramEsts = mle(x,'options',options);%,'optimfun','fmincon'
         paramEsts = [0.5,paramEsts(1),paramEsts(1),paramEsts(2),...
             paramEsts(2)];
-        
+
     end
-    
+
 catch
     single_distro = 1;
 %     disp('Parameters estimated for single peak Gaussian')
@@ -508,7 +508,7 @@ end
 
 % % %show the result
 % % figure
-% % % [~, bins] = 
+% % % [~, bins] =
 % % histogram(x,100);
 % % % bins = -2.5:.5:7.5;
 % % % h = bar(bins,histc(x,bins)/(length(x)*0.5),'histc');

@@ -1,41 +1,41 @@
 function [u, cc, dm, m, tSwitch] = funIDIC(varargin)
 % u = funIDIC(filename, sSize, sSizeMin, runMode) is the main function that performs
-% IDIC on a time series of images.  
-% 
+% IDIC on a time series of images.
+%
 % INPUTS
 % -------------------------------------------------------------------------
-%   filename: string for the filename prefix for the images in 
-%             the current directory.  
+%   filename: string for the filename prefix for the images in
+%             the current directory.
 %             Input options:
 %             --- If image is not within a cell) ---
-%             1) 'filename*.mat' or 'filename*' 
-% 
+%             1) 'filename*.mat' or 'filename*'
+%
 %             --- If image is within a cell that contains multichannels ---
 %             2) filename{1} = 'filename*.mat' or 'filename*' and
 %                filename{2} = channel number containing images you want to
 %                              run IDIC on.
 %                (if the channel is not provided, i.e. length(filename) = 1
 %                , then channel = 1
-%                 
-%   sSize: interrogation window (subset) size for the first iterations.  
+%
+%   sSize: interrogation window (subset) size for the first iterations.
 %          Must be, 32,64,96, or 128 pixels and a two column
 %          array (one for each dimenision) or scalar (equal for all
 %          dimensions).
 %   sSizeMin: interrogation window (subset) minimum size.
 %
-%   runMode: string that defines the method of running IDIC. Options: 
+%   runMode: string that defines the method of running IDIC. Options:
 %             cumulative (time0 -> time1, time0 -> time2, ...)
 %             (Allowable inputs: 'c','cum','cumulative')
-%             or 
+%             or
 %             incremental (time0 -> time1, time1 -> time2, ...)
 %             (Allowable inputs: 'i','inc','incremental')
-%             or 
-%             hybrid 
+%             or
+%             hybrid
 %             (Allowable inputs: 'h','hyb','hybrid')
-%             
+%
 % OUTPUTS
 % -------------------------------------------------------------------------
-%   u: displacement field vector defined at every meshgrid point with 
+%   u: displacement field vector defined at every meshgrid point with
 %      spacing dm. Format: cell array, each containing a 3D matrix for each
 %      time point
 %         (components in x,y)
@@ -46,13 +46,13 @@ function [u, cc, dm, m, tSwitch] = funIDIC(varargin)
 %   dm: final meshgrid spacing (8 by default)
 %   gridPoint: final meshgrid points
 %   tSwitch: switching point chosen for hybrid scheme
-% 
+%
 % NOTES
 % -------------------------------------------------------------------------
 % none
-% 
-% For more information please see 
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+%
+% For more information please see
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 
 
@@ -62,7 +62,7 @@ I{1} = loadFile(fileInfo,1);
 
 %% ---- Opening and Reading Subsequent Images ---
 numImages = length(fileInfo.filename);
-u = cell(numImages-1,1); 
+u = cell(numImages-1,1);
 cc = cell(numImages-1,1);
 
 for i = 2:numImages % Reads images starting on the second image
@@ -72,37 +72,37 @@ for i = 2:numImages % Reads images starting on the second image
     %Start DIC
     disp(['Current file: ' fileInfo.filename{i}])
     [u_,cc{i-1},dm,m,tSwitch(i-1)] = IDIC(I,sSize0,sSizeMin,u_);
-    
+
     %Save iterations of DIC
     u{i-1}{1} = -u_{1};  u{i-1}{2} = -u_{2}; u{i-1}{3} = u_{3};
 
-    if strcmpi(runMode(1),'i') == 1 % Incremental mode        
+    if strcmpi(runMode(1),'i') == 1 % Incremental mode
         I{1} = I{2}; % Update reference image
         u_ = num2cell(zeros(1,3)); % No predictor displacement in next time step
     end
-    
-    if strcmpi(runMode(1),'h') == 1 % If hybrid mode        
+
+    if strcmpi(runMode(1),'h') == 1 % If hybrid mode
         if tSwitch(end) == 1
             disp('Updating reference image due to poor correlation.')
             disp('Rerunning DIC on the time step')
-            I{1} = loadFile(fileInfo,i-1); %Update reference image   
+            I{1} = loadFile(fileInfo,i-1); %Update reference image
             u_ = num2cell(zeros(1,3)); % No predictor displacement in next time step
-            
+
             % Run DIC again on updated time step
             [u_,cc{i-1},dm,m,tSwitch(i-1)] = IDIC(I,sSize0,sSizeMin,u_);
             tSwitch(i-1) = tSwitch(i-1) + 1;
-            
+
             %Save iterations of DIC
             u{i-1}{1} = -u_{1};  u{i-1}{2} = -u_{2}; u{i-1}{3} = u_{3};
         end
     end
 
     disp(['Elapsed Time for all iterations: ',num2str(toc(tStart))]);
-    
+
 end
 
 if strcmpi(runMode(1),'h') == 1
-    % Update displacement for to cumulative 
+    % Update displacement for to cumulative
     option = 'spline';
     tStart = tic;
     disp('Update displacement for Hybrid mode');
@@ -158,7 +158,7 @@ end
 
 % Ensure range of subset size
 if min(sSize) < 32 || max(sSize > 128)
-   error('Subset size must be within 32 and 128 pixels'); 
+   error('Subset size must be within 32 and 128 pixels');
 end
 
 % Ensure even subset size
@@ -181,7 +181,7 @@ switch lower(runMode)
     case 'inc', runMode = 'incremental';
     case 'c', runMode = 'cumulative';
     case 'i', runMode = 'incremental';
-    case 'hybrid', runMode = 'hybrid';    
+    case 'hybrid', runMode = 'hybrid';
     case 'hyb', runMode = 'hybrid';
     case 'h', runMode = 'hybrid';
     case 'incremental', runMode = 'incremental';

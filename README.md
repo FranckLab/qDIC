@@ -8,7 +8,7 @@ The repository contains the MATLAB m-files for qDIC along with synthetic example
 ### Software Requirement
 MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circumstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a on CentOS 7 and Windows 7/10 x64.
 
-A "basic" version is available (in beta) that supports base Matlab (i.e., with no Toolboxs) with similar performance from https://github.com/ALandauer/qDICb. 
+A "basic" version is available (in beta) that supports base Matlab (i.e., with no Toolboxs) with similar performance from https://github.com/ALandauer/qDICb.
 
 ### Input Image Requirements
 * To check if the images have the required speckle pattern and intensity values for correlation please use our [DIC simulator](https://github.com/FranckLab/DIC-Simulator).
@@ -23,7 +23,7 @@ A "basic" version is available (in beta) that supports base Matlab (i.e., with n
 3. Run the `exampleRunFile.m` file to get 2D displacement fields between the two images. Note that the displacement output is in an nx1x3 cell array.
 
 ## Files
-Function files
+* Function files
  - addDisplacements_2D.m
  - checkConvergenceSSD_2D.m
  - DIC.m
@@ -37,11 +37,11 @@ Function files
  - replaceOutliers_2D.m
  - areaMapping_2D.m
 
-Supplemental .m files from the MATLAB file exchange:
+* Supplemental .m files from the MATLAB file exchange:
  - inpaint_nans.m
  - mirt2D_mexinterp.m  (Optional, not currently in use)
 
-Example files to run basic qDIC
+* Example files to run basic qDIC
  - exampleRunFile.m
  - img2mat.m
  - imageCropping.m
@@ -83,4 +83,4 @@ url="https://doi.org/10.1007/s11340-018-0377-4"
 ```
 
 ## Contact and support
-For questions, please first refer to [FAQ](https://github.com/FranckLab/qDIC#faq) and [Questions/Issues](https://github.com/FranckLab/qDIC/issues) or the same for FIDVC (shared code for many functions, so certain questions will translate between the two). Add a new question if similar issue hasn't been reported. We will try to help you as soon as possible. The author's contact information can be found at [Franck Lab](https://www.franck.engr.wisc.edu/).
+For questions, please first refer to [FAQ](https://github.com/FranckLab/FIDIC#faq) and [Questions/Issues](https://github.com/FranckLab/FIDIC/issues). Add a new question if similar issue hasn't been reported. We shall help you at the earliest. The author's contact information can be found at [Franck Lab](http://franck.engin.brown.edu).

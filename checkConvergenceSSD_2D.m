@@ -32,7 +32,7 @@ function [converged01, SSE1 , sSize1, sSpacing1] = checkConvergenceSSD_2D(I,SSE,
 % default constants are based on empirical results.
 %
 % If used please cite:
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 
 I{1}(isnan(I{1})) = 0;
@@ -60,43 +60,43 @@ converged01 = 0;
 
 
 if iteration > 1 % skip before first displacement estimation
-    
+
     %check if sSize is larger than the the minimum size requested
     sSize1 = sSize0/2; %window size refinement
-    
+
     % ensure that all subset sizes are at minimum sSizeMin pixels in length
     sSize1(sSize1 < sSizeMin) = sSizeMin;
-    
+
     % window spacing refinement. Only do if the sSpacing > 8 pixels
     if (sSpacing0 >= 32)
         sSpacing1 = sSpacing0/2;
     end
     sSpacing1(sSpacing1 < 8) = 8;
-    
+
     if prod(single(sSpacing1 == 16)) % condition if spacing = 16
-        
+
         idx = (find(prod(single(sSpacing == 16),2))-1):iteration;
         if length(idx) > 2
             dSSE = diff(SSE(idx)); % calculate difference
             dSSE = dSSE/dSSE(1); % normalize difference
-            
+
             % if dSSE meets first convergence criteria then refine spacing
             % to the minimum value, 8 pixels.
             if dSSE(end) <= convergenceCrit(1)
                 sSize1 = sSize0;
                 sSpacing1 = [8 8];
-                
+
             end
         end
-        
+
         % condition if spacing is the minimum, 8 voxels
     elseif  prod(single(sSpacing1 == 8))
         idx = (find(prod(single(sSpacing == 8),2))-1):iteration;
-        
+
         if length(idx) > 2
             dSSE = diff(SSE(idx));
             dSSE = dSSE/dSSE(1);
-            
+
             % if dSSE meets first convergence criteria and spacing is the
             % mimumum then convergence has been met and stop all
             % iterations.
@@ -107,7 +107,7 @@ if iteration > 1 % skip before first displacement estimation
             end
         end
     end
-    
+
 end
 
 % global threshold criteria

@@ -1,15 +1,15 @@
 function u = filterDisplacements_2D(u0,filterSize,z)
 % I = filterDisplacements(I0,filterSize,z) applies a low-pass convolution
-% filter to the displacement field to mitigate divergence based on 
+% filter to the displacement field to mitigate divergence based on
 %
 % F. F. J. Schrijer and F. Scarano. Effect of predictor corrector filtering
-% on the stability and spatial resolution of iterative PIV interrogation. 
+% on the stability and spatial resolution of iterative PIV interrogation.
 % Exp. Fluids, 45(5):927{941, May 2008. doi: 10.1007/s00348-008-0511-7
-% 
+%
 % INPUTS
 % -------------------------------------------------------------------------
-%   u0: displacement field vector defined at every meshgrid point with 
-%      spacing dm. Format: cell array, each containing a 3D matrix 
+%   u0: displacement field vector defined at every meshgrid point with
+%      spacing dm. Format: cell array, each containing a 3D matrix
 %         (components in x,y,z)
 %         u0{1} = displacement in x-direction
 %         u0{2} = displacement in y-direction
@@ -24,10 +24,10 @@ function u = filterDisplacements_2D(u0,filterSize,z)
 % NOTES
 % -------------------------------------------------------------------------
 % none
-% 
+%
 % For more information please see section 2.2.
 % If used please cite:
-% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). 
+% Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 
 % Parse inputs and set defaults
@@ -39,7 +39,7 @@ if z == 0
     u = cellfun(@double, u0, 'UniformOutput',0); % no filter
 else
     rf = generateFilter(filterSize,z);
- 
+
     % apply filter using convolution
     for i = 1:length(u0), u{i} = double(convn(u0{i}, rf,'same')); end
 end
