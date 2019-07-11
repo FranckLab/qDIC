@@ -19,8 +19,8 @@ A "basic" version is available (in beta) that supports base Matlab (i.e., with n
 
 ### Running including example case
 1. Make sure that the main files are in the current (working) directory for MATLAB.
-2. Copy the desired test images `test_images` directory as needed.
-3. Run the `exampleRunFile.m` file to get 2D displacement fields between the two images. Note that the displacement output is in an nx1x3 cell array.
+2. Copy the desired test images to the `test_images` directory as needed.
+3. Run the `exampleRunFile.m` file to get 2D displacement fields between the two images. Note that the displacement output is in an nx1x3 cell array. The `exampleRunFile.m` script can (i.e., should) be modified to suit the needs of a given experiment.
 
 ## Files
 * Function files
