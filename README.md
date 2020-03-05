@@ -24,29 +24,30 @@ A "basic" version is available (in beta) that supports base Matlab (i.e., with n
 
 ## Files
 * Function files
- - addDisplacements_2D.m
- - checkConvergenceSSD_2D.m
- - DIC.m
- - filterDisplacements_2D.m
- - flagOutliers_2D.m
- - funIDIC.m
- - IDIC.m
- - inc2cum.m
- - FIDICinc2cum.m
- - removeOutliers_2D.m
- - replaceOutliers_2D.m
- - areaMapping_2D.m
+   - addDisplacements_2D.m
+   - checkConvergenceSSD_2D.m
+   - DIC.m
+   - filterDisplacements_2D.m
+   - flagOutliers_2D.m
+   - funIDIC.m
+   - IDIC.m
+   - inc2cum.m
+   - FIDICinc2cum.m
+   - removeOutliers_2D.m
+   - replaceOutliers_2D.m
+   - areaMapping_2D.m
 
 * Supplemental .m files from the MATLAB file exchange:
- - inpaint_nans.m
- - mirt2D_mexinterp.m  (Optional, not currently in use)
+   - inpaint_nans.m
+   - mirt2D_mexinterp.m  (Optional, not currently in use)
 
 * Example files to run basic qDIC
- - exampleRunFile.m
- - img2mat.m
- - imageCropping.m
- - image_eval.m
- - Example test images
+   - exampleRunFile.m
+   - img2mat.m
+   - imageCropping.m
+   - image_eval.m
+   - print_dic_report.m
+   - Example test images
 
 ## FAQ
 
