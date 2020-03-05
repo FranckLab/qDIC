@@ -1,4 +1,4 @@
-function [noise_percent,spatial_res,CI_disp_mean,no_im] = image_eval(Folder,ext)
+function [noise_percent,spatial_res,CI_disp_mean,no_im] = image_eval(Folder,ext,sSize0,sSizeMin)
 %This function performs basic noise floor and spetial resolution analyses
 %for images used in the DIC.  To use, take several (2+) completely static
 %images of the speckle pattern and label these with the keyword "static" in
@@ -38,19 +38,24 @@ l = length(files);
 
 %Only procede if evaluation images are present
 if l == 0
+    disp('Image evaluation skipped')
     %set failure flag
     no_im = 1;
     noise_percent = nan;
     spatial_res = nan;
     CI_disp_mean = nan;
 else
-    
+    disp('Running image evaluation DIC')
     no_im = 0;
     
     %read in the image sequence
     for ii = 1:l
         READ = imread(strcat(Folder,filesep,files(ii).name));
-        full_images(:,:,ii) = double(READ(:,:,1));
+        try 
+            full_images(:,:,ii) = double(rgb2gray(READ));
+        catch
+            full_images(:,:,ii) = double(READ);
+        end
     end
     
     %find the bitdepth of the images
@@ -73,6 +78,7 @@ else
     Y = ceil(Y);
     close
     
+
     images = full_images(Y(1):Y(2),X(1):X(2),:);
     
     %% Noise level
@@ -90,27 +96,24 @@ else
     image_pair{1} = images(:,:,1);
     image_pair{2} = images(:,:,2);
     
-    subset_size = [64,64];
-    
     u0 = cell(1,2);
     u0{1} = 0;
     u0{2} = 0;
-    
-    norm_xcc = 'u';
+
     
     %Do itereative DIC between the identical images
-    [u,~,~,~] = IDIC(image_pair,subset_size,u0,norm_xcc);
+    [u,~,~,~] = IDIC(image_pair,sSize0,sSizeMin,u0);
     
     %Compute spatial resolutions
-    spatial_res(1) = std2(u{1});
-    spatial_res(2) = std2(u{2});
-    spatial_res(3) = std2(u{3});
+    spatial_res(1) = nanstd(u{1}(:));
+    spatial_res(2) = nanstd(u{2}(:));
+    spatial_res(3) = nanstd(u{3}(:));
     
     z = 1.96;
     %Compute the confidence interval on the displacements
     CI_disp(:,:,1) = u{3} - z*spatial_res(3)/sqrt(2);
-    CI_disp_mean(1) = mean2(CI_disp(:,:,1));
+    CI_disp_mean(1) = nanmean(nanmean(CI_disp(:,:,1)));
     CI_disp(:,:,2) = u{3} + z*spatial_res(3)/sqrt(2);
-    CI_disp_mean(2) = mean2(CI_disp(:,:,2));
+    CI_disp_mean(2) = nanmean(nanmean(CI_disp(:,:,2)));
     
 end
