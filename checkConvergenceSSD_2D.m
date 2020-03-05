@@ -67,7 +67,7 @@ if iteration > 1 % skip before first displacement estimation
     % ensure that all subset sizes are at minimum sSizeMin pixels in length
     sSize1(sSize1 < sSizeMin) = sSizeMin;
 
-    % window spacing refinement. Only do if the sSpacing > 8 pixels
+    % window spacing refinement. 
     if (sSpacing0 >= 32)
         sSpacing1 = sSpacing0/2;
     end

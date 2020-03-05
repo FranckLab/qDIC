@@ -6,7 +6,7 @@ The repository contains the MATLAB m-files for qDIC along with synthetic example
 ## Running qDIC
 
 ### Software Requirement
-MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circumstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a on CentOS 7 and Windows 7/10 x64.
+MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Toolbox (for other miscellaneous function calls) are the minimum supported requirements to run this code.  Under some circumstances older versions may function using "interpn", but performance and/or accuracy may suffer (and you'll have to implement the change to "interpn").  Development is currently under Matlab 2017a (newer versions should be fine) on CentOS 7 and Windows 7/10 x64.
 
 A "basic" version is available (in beta) that supports base Matlab (i.e., with no Toolboxs) with similar performance from https://github.com/ALandauer/qDICb.
 
@@ -19,8 +19,8 @@ A "basic" version is available (in beta) that supports base Matlab (i.e., with n
 
 ### Running including example case
 1. Make sure that the main files are in the current (working) directory for MATLAB.
-2. Copy the desired test images to the `test_images` directory as needed.
-3. Run the `exampleRunFile.m` file to get 2D displacement fields between the two images. Note that the displacement output is in an nx1x3 cell array. The `exampleRunFile.m` script can (i.e., should) be modified to suit the needs of a given experiment.
+2. Copy the desired test images `test_images` directory as needed.
+3. Run the `exampleRunFile.m` file to get 2D displacement fields between the two images. Note that the displacement output is in an nx1x3 cell array.
 
 ## Files
 * Function files
