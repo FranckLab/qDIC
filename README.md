@@ -11,8 +11,8 @@ MATLAB 2011b (for "griddedInterpolant") and the associated Image Processing Tool
 A "basic" version is available (in beta) that supports base Matlab (i.e., with no Toolboxs) with similar performance from https://github.com/ALandauer/qDICb.  More up-to-date versions may be found at https://github.com/ALandauer/qDIC, although we occasionally reconcile the two versions 
 
 ### Input Image Requirements
-* To check if the images have the required speckle pattern and intensity values for correlation please use our [DIC simulator](https://github.com/FranckLab/DIC-Simulator).
-* We recommend that the input images should have at least 3 times the subset size as the number of pixels in each dimension. The default subset size is 64x64, meaning the minimum input image size should be 192x192.
+* To check if the images have the required speckle pattern and intensity values for correlation may want to look at our [DIC simulator](https://github.com/FranckLab/DIC-Simulator).
+* We recommend that the input images should have *at least* 3 times the subset size as the number of pixels in each dimension. The default subset size is 64px by 64px, meaning the minimum input image size should be 192px by 192px with spacing 8px this gives 25 by 25 measurment points in the image. Practically, to obtain workable spatial resolution for most cases the minimum is 512px by 512px for 65 by 65 points.
 * Non-square images are acceptable
 * The fundamental image type used for input is .tif (or .mat)
 * Out-of-the-box qDIC supports most common Matlab-readable images with our `img2mat.m` that calls `imread`, other file formats require simple modification
