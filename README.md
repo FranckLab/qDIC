@@ -61,11 +61,11 @@ No. But you can use [FIDVC](https://github.com/FranckLab/FIDVC), this finds 3D d
 
 **Why does the example fail to run?**
 
-In many cases where the example images fail to run, the minimum specifications for MATLAB have not been met.
+In many cases where the example images fail to run, the minimum specifications for MATLAB have not been met or settings have been assigned incorrectly. Make sure to read and understand this document, the comments in the code, and our paper (see below) when attempting to use and edit.
 
 ## Cite
 If used please cite:
-[Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). https://doi.org/10.1007/s11340-018-0377-4)
+Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018). https://doi.org/10.1007/s11340-018-0377-4
 
 ```bibtex
 @Article{Landauer2018,
@@ -80,8 +80,7 @@ issn="1741-2765",
 doi="10.1007/s11340-018-0377-4",
 url="https://doi.org/10.1007/s11340-018-0377-4"
 }
-}
 ```
 
 ## Contact and support
-For questions, please first refer to [FAQ](https://github.com/FranckLab/FIDIC#faq) and [Questions/Issues](https://github.com/FranckLab/FIDIC/issues). Add a new question if similar issue hasn't been reported as a GitHub "Issue". The author's contact information can be found at [Franck Lab](francklabbackup.me.wisc.edu) or via GitHub.
+For questions, please first refer to [FAQ](https://github.com/FranckLab/FIDIC#faq) and [Questions/Issues](https://github.com/FranckLab/FIDIC/issues). Add a new question if similar issue hasn't been reported as a GitHub "Issue". The authors' contact information can be found at [Franck Lab](francklabbackup.me.wisc.edu) or via GitHub.
