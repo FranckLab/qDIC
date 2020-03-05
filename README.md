@@ -1,4 +1,4 @@
-## The Franck Lab q-factor-based Digital Image Correlation Algorithm: qDIC.
+## q-factor-based Digital Image Correlation Algorithm: qDIC.
 
 ## Purpose
 The repository contains the MATLAB m-files for qDIC along with synthetic example images. The qDIC algorithm determines 2D displacement fields between consecutive images or from a static reference image to a current image, or using a "hybrid" reference updating scheme.
