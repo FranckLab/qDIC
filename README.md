@@ -57,7 +57,7 @@ Please refer to [input image requirement](https://github.com/FranckLab/FIDIC#inp
 
 **Can I use qDIC for finding displacement fields in 3D images?**
 
-No. But you can use [FIDVC](https://github.com/FranckLab/FIDVC), this finds 3D displacements in 3D image stack (i.e. a volumetric image). We do not support any 3D-DIC (stereo) functionality.
+No. But you can use [FIDVC](https://github.com/FranckLab/FIDVC), [qFIDVC](https://github.com/FranckLab/qFIDVC) or [ALDVC](https://github.com/FranckLab/ALDVC), which find 3D displacements in a 3D image stack (i.e. a volumetric image). We do not support any 3D-DIC (stereo) functionality.
 
 **Why does the example fail to run?**
 
