@@ -105,15 +105,15 @@ else
     [u,~,~,~] = IDIC(image_pair,sSize0,sSizeMin,u0);
     
     %Compute spatial resolutions
-    spatial_res(1) = nanstd(u{1}(:));
-    spatial_res(2) = nanstd(u{2}(:));
-    spatial_res(3) = nanstd(u{3}(:));
+    spatial_res(1) = std(u{1},0,'all','omitnan');
+    spatial_res(2) = std(u{2},0,'all','omitnan');
+    spatial_res(3) = std(u{3},0,'all','omitnan');
     
     z = 1.96;
     %Compute the confidence interval on the displacements
     CI_disp(:,:,1) = u{3} - z*spatial_res(3)/sqrt(2);
-    CI_disp_mean(1) = nanmean(nanmean(CI_disp(:,:,1)));
+    CI_disp_mean(1) = mean(CI_disp(:,:,1),'all','omitnan');
     CI_disp(:,:,2) = u{3} + z*spatial_res(3)/sqrt(2);
-    CI_disp_mean(2) = nanmean(nanmean(CI_disp(:,:,2)));
+    CI_disp_mean(2) = mean(CI_disp(:,:,2),'all','omitnan');
     
 end
