@@ -1,5 +1,6 @@
 %% Example run file for the IDIC
-% VARIABLES OPTIONS
+%
+% VARIABLES/OPTIONS
 % -------------------------------------------------------------------------
 %   imagesFolder: subdirectory containing the series of images on which to run
 %                 FIDIC. Images are read in alphanumeric order, which is
@@ -43,6 +44,8 @@
 % Landauer, A.K., Patel, M., Henann, D.L. et al. Exp Mech (2018).
 % https://doi.org/10.1007/s11340-018-0377-4
 % -------------------------------------------------------------------------
+%
+
 %% Set up workspace and images
 
 clear; close all; clc;
@@ -58,17 +61,21 @@ max_def_idx = 'b'; %Specify where the max deformation occurs
                     %'end' or 'e' for the last image,
                     %'beginning' or 'b' for the first,
                     %or specific with an integer
-numImages = 3; %use only first n images in the folder, 'all' for all images
-spacing = 1; %spacing between images to using in input stack
+numImages = 10; %use only first n images in the folder, 'all' for all images
+spacing = 2; %spacing between images to using in input stack
               %Convert input images to .mat
+
 %Compute basic noise floor and measurement resultion metrics
+%
+%***** to run image evaluation, static images with the suffix "_static" must be included ******
+%
 [noise_percent,meas_res,CI_disp_mean,no_im] = image_eval(folder_in,ext_in,sSize,sSizeMin);
 
 %Optionally crop images.  Set crop to 'y' or 'yes' to enable cropping,
 %or enter a set of coordinates [x_topleft,y_topleft,x_bottomright,y_bottomright].
 crop = 'yes';
 % crop = [1,1,511,511];
-[crop_nw_loc,folder_out,ext_crp] = imageCropping(folder_in,ext_in,numImages,spacing,max_def_idx,crop);
+[crop_nw_loc,folder_out,ext_crp] = imageCropping(folder_in,ext_in,numImages,max_def_idx,crop);
 
 resultsFolder = ['.',filesep,'Results',filesep];
 
@@ -161,6 +168,30 @@ else
     save(strcat(resultsFolder,'results_qDIC.mat'),'u','cc','dm','gridPoints');
 end
 
+%% example plotting
+f1 = figure;
+f1.Position = [100,100,1800,900];
+subplot(1,2,1)
+u_curr = u{length(u)}{1};
+contourf(u_curr,20,'linestyle','none')
+c= colorbar;
+c.Label.String = 'u_1 displacement (px)';
+axis image
+xlabel('x_1 (subsets)')
+ylabel('x_2 (subsets)')
+title('Displacememt, u_1')
+set(gca,'fontsize',24)
+
+subplot(1,2,2)
+u_curr = u{length(u)}{2};
+contourf(u_curr,20,'linestyle','none')
+c = colorbar;
+c.Label.String = 'u_2 displacement (px)';
+axis image
+xlabel('x_1 (subsets)')
+ylabel('x_2 (subsets)')
+title('Displacememt, u_2')
+set(gca,'fontsize',24)
 
 %% CLEAN UP
 %Clean up the current set of images from the cd
