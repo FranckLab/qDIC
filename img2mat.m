@@ -1,18 +1,19 @@
-function [cellIMG,filename] = img2mat(folder_in,mat_file_save,ext_in,smoothing,filt_opt,freq_img,s)
+function [cellIMG,filename,filt_opt] = img2mat(folder_in,mat_file_save,ext_in,smoothing,filt_opt,freq_img,s)
 %Read images and write them out in .mat
 %
 % INPUTS
 % -------------------------------------------------------------------------
 %   folder_in: folder containing orginal images
+%   mat_file_save: 'yes' or 'no' to save out imags to .mat
 %   ext_in: image formate extention
-%   folder_in: folder containing orginal images
-%   smoothing: on/off for Gaussian smoothing prefilter ([3,3],0.5)
-%   s: max number of images to use
+%   smoothing: on/off for Gaussian smoothing prefilter
+%   filt_opt: Gaussian smoothing prefilter options (default: [3,3],0.5)
 %   freq_img: frequency to sample the image stack
+%   s: max number of images to use
 %
 % OUTPUTS
 % -------------------------------------------------------------------------
-%   IMG: image stack for all current images
+%   cellIMG: image stack for all current images
 %   filename: regex for filename prefix
 %   filt_opt: filter options used if the smoothing param was set to 'yes'
 %
@@ -46,6 +47,7 @@ if strcmp(smoothing,'yes')
         %improve contrast gradients
         cellIMG{cnt} = imfilter(double(READ(:,:,1)),filter_gauss,'replicate');
         
+        filename = 'images not saved to disk';
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
         %         drawnow
@@ -62,6 +64,7 @@ else
         %improve contrast gradients
         cellIMG{cnt} = double(READ(:,:,1));
         
+        filename = 'images not saved to disk';
         % Option to plot the images
         %         imshow(IMG(:,:,ii))
         %         drawnow
@@ -80,7 +83,7 @@ if strcmp(mat_file_save(1),'y')
             '_IDIC_image_',num2str(ii+9999),'.mat');
         save(filename,'IMG');
     end
-    cellIMG = 'images save to disk';
+    cellIMG = 'images saved to disk';
     filename = '*IDIC_image*';
 else
     filename = files(1).name;
