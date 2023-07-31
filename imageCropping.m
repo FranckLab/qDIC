@@ -1,4 +1,4 @@
-function [crop_nw_loc,folder_out,fmt] = imageCropping(folder_in,ext_in,numImages,spacing,max_def_idx,crop)
+function [crop_nw_loc,folder_out,fmt] = imageCropping(folder_in,ext_in,numImages,max_def_idx,crop)
 %This function crops the input images to include only the region of
 %interest
 %
@@ -95,7 +95,7 @@ if strcmp(crop, 'yes')||strcmp(crop, 'y')
     
     %% Crop and write out files
     
-    image_idx = 1:spacing:l;
+    image_idx = 1:l;
     % Loop through files
     for ii = 1:length(image_idx)
         READ = imread(strcat(folder_in,filesep,files(image_idx(ii)).name));
@@ -125,7 +125,7 @@ elseif length(crop) == 4
     Y_ss(1) = crop(2);
     Y_ss(2) = crop(4);
     
-    image_idx = 1:spacing:l;
+    image_idx = 1:l;
     % Loop through files
     for ii = 1:length(image_idx)
         READ = imread(strcat(folder_in,filesep,files(image_idx(ii)).name));
